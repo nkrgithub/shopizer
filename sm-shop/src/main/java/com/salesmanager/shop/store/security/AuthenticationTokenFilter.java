@@ -14,6 +14,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import com.salesmanager.core.model.common.UserContext;
@@ -41,9 +42,11 @@ public class AuthenticationTokenFilter extends OncePerRequestFilter {
 
     
     @Inject
+	@Lazy
     private CustomAuthenticationManager jwtCustomCustomerAuthenticationManager;
     
     @Inject
+	@Lazy
     private CustomAuthenticationManager jwtCustomAdminAuthenticationManager;
 
     @Override
