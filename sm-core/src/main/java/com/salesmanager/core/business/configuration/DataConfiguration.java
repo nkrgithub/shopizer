@@ -65,8 +65,8 @@ public class DataConfiguration {
     @Value("${db.maxPoolSize}")
     private int maxPoolSize;
 
-    @Bean
-    public HikariDataSource dataSource() {
+	@Bean
+	public HikariDataSource dataSource() {
     	HikariDataSource dataSource = DataSourceBuilder.create().type(HikariDataSource.class)
     	.driverClassName(driverClassName)
     	.url(url)

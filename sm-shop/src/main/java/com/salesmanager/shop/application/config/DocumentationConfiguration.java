@@ -9,6 +9,7 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -16,7 +17,6 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.bind.annotation.RequestMethod;
 
-import com.google.common.base.Predicate;
 import com.google.common.base.Predicates;
 
 import springfox.documentation.RequestHandler;
@@ -34,10 +34,10 @@ import springfox.documentation.service.VendorExtension;
 import springfox.documentation.spi.DocumentationType;
 import springfox.documentation.spi.service.contexts.SecurityContext;
 import springfox.documentation.spring.web.plugins.Docket;
-import springfox.documentation.swagger2.annotations.EnableSwagger2;
+import springfox.documentation.swagger2.annotations.EnableSwagger2WebMvc;
 
 @Configuration
-@EnableSwagger2
+@EnableSwagger2WebMvc
 public class DocumentationConfiguration {
 
 	public static final Contact DEFAULT_CONTACT = new Contact("Shopizer", "https://www.shopizer.com", "");
@@ -86,11 +86,10 @@ public class DocumentationConfiguration {
 	
 	final Predicate<RequestHandler> requestHandlers() {
 		
-		   Set<Predicate<RequestHandler>> matchers = new HashSet<Predicate<RequestHandler>>();
-		   matchers.add(RequestHandlerSelectors.basePackage("com.salesmanager.shop.store.api.v1"));
-		   matchers.add(RequestHandlerSelectors.basePackage("com.salesmanager.shop.store.api.v2"));
+		   Predicate<RequestHandler> predicate = RequestHandlerSelectors.basePackage("com.salesmanager.shop.store.api.v1");
+		   predicate = predicate.or(RequestHandlerSelectors.basePackage("com.salesmanager.shop.store.api.v2"));
 		   
-		   return Predicates.or(matchers);
+		   return predicate;
 
 	}
 
