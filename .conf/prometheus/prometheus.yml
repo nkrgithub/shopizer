@@ -1,0 +1,32 @@
+# Discover Eureka services to scrape.
+global:
+  scrape_interval:     15s
+  evaluation_interval: 15s
+scrape_configs:
+  - job_name: 'prometheus'
+    static_configs:
+      - targets: ['ip:9090']
+  - job_name: 'node'
+    static_configs:
+      - targets: ['ip:9100']
+  - job_name: 'mysql_exporter'
+    static_configs:
+      - targets: ['ip:9104']
+  - job_name: 'eureka'
+    metrics_path: "/actuator/prometheus"
+    # Scrape Eureka itself to discover new services.
+    eureka_sd_configs:
+      - server: http://127.0.0.1:12345/eureka
+    relabel_configs:
+      - source_labels: [__meta_eureka_app_instance_metadata_prometheus_scrape]
+        action: keep
+        regex: true
+      - source_labels: [__meta_eureka_app_instance_metadata_prometheus_path]
+        action: replace
+        target_label: __metrics_path__
+        regex: (.+)
+      - source_labels: [__address__, __meta_eureka_app_instance_metadata_prometheus_port]
+        action: replace
+        regex: ([^:]+)(?::\d+)?;(\d+)
+        replacement: $1:$2
+        target_label: __address__
