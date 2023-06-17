@@ -213,7 +213,7 @@ public class ProductManufacturerApi {
 		}
 	}
 
-	@RequestMapping(value = "/category/{id}/manufacturer", method = RequestMethod.GET)
+	@RequestMapping(value = "/category/{id}/manufacturers", method = RequestMethod.GET)
 	@ResponseStatus(HttpStatus.OK)
 	@ApiOperation(httpMethod = "GET", value = "Get all manufacturers for all items in a given category", notes = "", produces = "application/json", response = List.class)
 	@ResponseBody
