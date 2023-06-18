@@ -45,6 +45,6 @@ services:
     ports:
       - "9104:9104"
     environment:
-      DATA_SOURCE_NAME: 'roo:123456@(127.0.0.1:13306)'
+      DATA_SOURCE_NAME: 'root:123456@(127.0.0.1:13306)'
     networks:
       - monitor
