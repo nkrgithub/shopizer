@@ -2,6 +2,9 @@
 org.springframework.context.ApplicationContextInitializer=\
 io.microsphere.spring.context.event.BeanEventPublishingInitializer
 
+io.microsphere.spring.context.event.BeanFactoryListener=\
+io.microsphere.spring.context.event.ParallelPreInstantiationSingletonsBeanFactoryListener
+
 org.springframework.boot.env.EnvironmentPostProcessor=\
 com.acme.spring.boot.env.sentinel.SentinelConfigEnvironmentPostProcessor
 
