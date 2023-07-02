@@ -1,0 +1,98 @@
+application-description: '@project.description@'
+application-version: '@project.version@'
+build:
+  timestamp: '@maven.build.timestamp@'
+
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http://127.0.0.1:12345/eureka
+  instance:
+    metadataMap:
+      prometheus:
+        path: ${management.endpoints.web.basePath:/actuator}/prometheus
+        port: ${management.server.port:${server.port}}
+        scrape: true
+logging:
+  level:
+    com:
+      shopizer: INFO
+      zaxxer:
+        hikari:
+          HikariConfig: INFO
+    org:
+      apache:
+        http: ERROR
+      hibernate: ERROR
+      hibernate.SQL: ERROR
+      hibernate.type.descriptor.sql.BasicBinder: INFO
+      springframework: ERROR
+management:
+  endpoint:
+    health:
+      show-components: always
+      show-details: always
+  endpoints:
+    jmx:
+      exposure:
+        include: '*'
+    web:
+      exposure:
+        include: '*'
+  health:
+    elasticsearch:
+      enabled: false
+    mail:
+      enabled: false
+    ping:
+      enabled: true
+server:
+  error:
+    whitelabel:
+      enabled: false
+  port: 9090
+  tomcat:
+    mbeanregistry:
+      enabled: true
+spring:
+  application:
+    name: shopizer-security-service
+  cloud:
+    sentinel:
+      eager: true
+      transport:
+        dashboard: localhost:18080
+      web-context-unify: true
+  jmx:
+    enabled: true
+  jpa:
+    hibernate:
+      use-new-id-generator-mappings: true
+    properties:
+      hibernate:
+        default_schema: SALESMANAGER
+  main:
+    allow-bean-definition-overriding: true
+  servlet:
+    multipart:
+      max-file-size: 4MB
+      max-request-size: 10MB
+
+
+db:
+  driverClass: com.mysql.cj.jdbc.Driver
+  initialPoolSize: 4
+  jdbcUrl: jdbc:mysql://127.0.0.1:13306/SALESMANAGER?autoReconnect=true&useUnicode=true&characterEncoding=UTF-8
+  maxPoolSize: 8
+  minPoolSize: 4
+  password: 123456
+  preferredTestQuery: SELECT 1
+  schema: SALESMANAGER
+  show:
+    sql: true
+  user: root
+hibernate:
+  dialect: org.hibernate.dialect.MySQL5InnoDBDialect
+  hbm2ddl:
+    auto: update
+
