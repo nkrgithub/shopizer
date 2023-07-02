@@ -1,6 +1,6 @@
 package com.salesmanager.shop.commons.entity.currency;
 
-import com.salesmanager.core.model.generic.SalesManagerEntity;
+import com.salesmanager.shop.commons.entity.generic.SalesManagerEntity;
 
 import javax.persistence.Cacheable;
 import javax.persistence.Column;

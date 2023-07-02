@@ -1,6 +1,6 @@
 package com.salesmanager.shop.commons.model.audit;
 
-import com.salesmanager.core.utils.CloneUtils;
+import com.salesmanager.shop.commons.util.CloneUtils;
 import org.apache.commons.lang3.StringUtils;
 
 import javax.persistence.Column;
