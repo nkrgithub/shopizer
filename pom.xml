@@ -32,6 +32,9 @@
         <module>sm-core</module>
         <module>sm-shop-model</module>
         <module>sm-shop</module>
+
+        <module>shopizer-commons</module>
+        <module>shopizer-security</module>
         <module>eureka-server</module>
     </modules>
 
@@ -82,6 +85,9 @@
 
         <!-- api documentation -->
         <swagger.version>2.9.2</swagger.version>
+
+        <!-- JMH -->
+        <jmh.version>1.36</jmh.version>
 
         <!-- jacoco coverage -->
         <coverage.lines>.30</coverage.lines>
@@ -397,6 +403,18 @@
                 <scope>import</scope>
             </dependency>
 
+            <dependency>
+                <groupId>org.openjdk.jmh</groupId>
+                <artifactId>jmh-core</artifactId>
+                <version>${jmh.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.openjdk.jmh</groupId>
+                <artifactId>jmh-generator-annprocess</artifactId>
+                <version>${jmh.version}</version>
+            </dependency>
+
         </dependencies>
 
     </dependencyManagement>
@@ -489,6 +507,18 @@
             <scope>test</scope>
         </dependency>
 
+        <!-- JMH -->
+        <dependency>
+            <groupId>org.openjdk.jmh</groupId>
+            <artifactId>jmh-core</artifactId>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.openjdk.jmh</groupId>
+            <artifactId>jmh-generator-annprocess</artifactId>
+            <scope>test</scope>
+        </dependency>
 
     </dependencies>
 
