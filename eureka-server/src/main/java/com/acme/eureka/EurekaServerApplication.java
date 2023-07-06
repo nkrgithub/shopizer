@@ -16,18 +16,14 @@
  */
 package com.acme.eureka;
 
-import jdk.jfr.Description;
-import jdk.jfr.Event;
-import jdk.jfr.Label;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
+import org.springframework.boot.builder.SpringApplicationBuilder;
+import org.springframework.boot.web.servlet.support.SpringBootServletInitializer;
 import org.springframework.cloud.netflix.eureka.server.EnableEurekaServer;
 import org.springframework.scheduling.annotation.EnableScheduling;
-import org.springframework.scheduling.annotation.Scheduled;
-
-import java.util.Date;
 
 /**
  * Eureka Server
@@ -37,7 +33,7 @@ import java.util.Date;
 @EnableAutoConfiguration
 @EnableEurekaServer
 @EnableScheduling
-public class EurekaServerApplication {
+public class EurekaServerApplication extends SpringBootServletInitializer {
 
     private static final Logger logger = LoggerFactory.getLogger(EurekaServerApplication.class);
 
@@ -45,19 +41,24 @@ public class EurekaServerApplication {
         SpringApplication.run(EurekaServerApplication.class, args);
     }
 
-
-    @Label("Hello World")
-    @Description("Helps programmer getting started")
-    static class HelloWorld extends Event {
-        @Label("Message")
-        String message;
+    @Override
+    protected SpringApplicationBuilder configure(SpringApplicationBuilder builder) {
+        builder.sources(EurekaServerApplication.class);
+        return builder;
     }
 
-    @Scheduled(fixedRate = 5000, initialDelay = 1000)
-    public void schedule() {
-        HelloWorld helloWorld = new HelloWorld();
-        helloWorld.message = "Hello,World : " + new Date();
-        helloWorld.commit();
-        logger.info(helloWorld.message);
-    }
+    //    @Label("Hello World")
+//    @Description("Helps programmer getting started")
+//    static class HelloWorld extends Event {
+//        @Label("Message")
+//        String message;
+//    }
+//
+//    @Scheduled(fixedRate = 5000, initialDelay = 1000)
+//    public void schedule() {
+//        HelloWorld helloWorld = new HelloWorld();
+//        helloWorld.message = "Hello,World : " + new Date();
+//        helloWorld.commit();
+//        logger.info(helloWorld.message);
+//    }
 }
