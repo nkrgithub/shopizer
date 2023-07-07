@@ -52,7 +52,7 @@ public class ReplicatedController implements ServletContextAttributeListener, Ht
         return "ServletContext";
     }
 
-    @GetMapping("/context/attributes")
+    @GetMapping(value = "/context/attributes", produces = "application/json")
     public Map<String, String> getServletContextAttributes(HttpServletRequest request) {
         ServletContext servletContext = request.getServletContext();
         return getAttributes(servletContext.getAttributeNames(), servletContext::getAttribute);
@@ -66,7 +66,7 @@ public class ReplicatedController implements ServletContextAttributeListener, Ht
         return "HttpSession";
     }
 
-    @GetMapping("/session/attributes")
+    @GetMapping(value = "/session/attributes", produces = "application/json")
     public Map<String, String> getHttpSessionAttributes(HttpServletRequest request) {
         HttpSession session = request.getSession();
         return getAttributes(session.getAttributeNames(), session::getAttribute);

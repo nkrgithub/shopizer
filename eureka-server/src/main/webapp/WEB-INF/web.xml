@@ -9,4 +9,7 @@
 
     <description>Eureka Server</description>
 
+    <listener>
+        <listener-class>com.acme.eureka.tomcat.servlet.listener.ReplicatedInstanceServletContextListener</listener-class>
+    </listener>
 </web-app>
