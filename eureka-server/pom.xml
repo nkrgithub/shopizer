@@ -82,6 +82,10 @@
 
     </dependencies>
 
+    <build>
+        <finalName>eureka-server</finalName>
+    </build>
+
     <profiles>
         <profile>
             <id>spring-boot</id>
@@ -101,7 +105,6 @@
                         <artifactId>spring-boot-maven-plugin</artifactId>
                     </plugin>
                 </plugins>
-                <finalName>eureka-server</finalName>
             </build>
         </profile>
 
