@@ -202,7 +202,7 @@
                        pattern="%h %l %u %t &quot;%r&quot; %s %b" />
                 <Context path="/"
                          className="org.apache.catalina.ha.context.ReplicatedContext"
-                         docBase="/Users/mercyblitz/Tech/workspace/github/mercyblitz/shopizer/eureka-server/target/eureka-server-3.2.5/" >
+                         docBase="TODO" >
                 </Context>
 
             </Host>
