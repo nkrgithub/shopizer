@@ -151,7 +151,7 @@ public class ReplicatedInstanceChannelListener implements ChannelListener {
                 this.registry = registry;
             }
         }
-        return eurekaServerContext.getRegistry();
+        return registry;
     }
 
     private EurekaServerContext getEurekaServerContext() {
