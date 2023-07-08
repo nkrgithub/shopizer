@@ -135,11 +135,14 @@
                 /docs/cluster-howto.html  (simple how to)
                 /docs/config/cluster.html (reference documentation) -->
             <Cluster className="org.apache.catalina.ha.tcp.SimpleTcpCluster"
-                     channelSendOptions="8">
+                     channelSendOptions="64">
 
+                <!-- Do not need to the session replication -->
+                <!--
                 <Manager className="org.apache.catalina.ha.session.DeltaManager"
                          expireSessionsOnShutdown="false"
                          notifyListenersOnReplication="true"/>
+                -->
 
                 <Channel className="org.apache.catalina.tribes.group.GroupChannel">
                     <Membership className="org.apache.catalina.tribes.membership.McastService"
@@ -202,7 +205,7 @@
                        pattern="%h %l %u %t &quot;%r&quot; %s %b" />
                 <Context path="/"
                          className="org.apache.catalina.ha.context.ReplicatedContext"
-                         docBase="TODO" >
+                         docBase="/user/home/eureka-server/target/eureka-server" >
                 </Context>
 
             </Host>
