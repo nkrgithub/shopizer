@@ -23,6 +23,7 @@ import org.apache.catalina.core.ApplicationContext;
 import org.apache.catalina.core.ContainerBase;
 import org.apache.catalina.ha.CatalinaCluster;
 import org.apache.catalina.tribes.Channel;
+import org.springframework.util.ReflectionUtils;
 
 import javax.servlet.ServletContainerInitializer;
 import javax.servlet.ServletContext;
@@ -30,6 +31,7 @@ import javax.servlet.ServletException;
 import java.util.Set;
 
 import static org.springframework.util.ReflectionUtils.doWithFields;
+import static org.springframework.util.ReflectionUtils.makeAccessible;
 
 /**
  * Replicated Instance {@link ServletContainerInitializer}
@@ -46,10 +48,10 @@ public class ReplicatedInstanceServletContainerInitializer implements ServletCon
         String className = servletContextClass.getName();
         if ("org.apache.catalina.core.ApplicationContextFacade".equals(className)) {
             doWithFields(servletContextClass, field -> {
-                field.setAccessible(true);
+                makeAccessible(field);
                 ApplicationContext applicationContext = (ApplicationContext) field.get(servletContext);
                 doWithFields(applicationContext.getClass(), f -> {
-                            f.setAccessible(true);
+                            makeAccessible(f);
                             Context context = (Context) f.get(applicationContext);
                             if (context instanceof ContainerBase) {
                                 ContainerBase containerBase = (ContainerBase) context;
