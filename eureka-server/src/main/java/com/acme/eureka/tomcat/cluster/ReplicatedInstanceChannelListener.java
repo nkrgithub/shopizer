@@ -32,18 +32,24 @@ import java.io.IOException;
 import java.io.Serializable;
 
 /**
- * TODO Comment
+ * Replicated Instance {@link ChannelListener}
  *
  * @author <a href="mailto:mercyblitz@gmail.com">Mercy</a>
- * @since TODO
+ * @see ChannelListener
+ * @since 1.0.0
  */
 public class ReplicatedInstanceChannelListener implements ChannelListener {
 
-    private static ServletContext servletContext;
+    private final ServletContext servletContext;
 
-    public static void setServletContext(ServletContext servletContext) {
-        ReplicatedInstanceChannelListener.servletContext = servletContext;
-        servletContext.log("ReplicatedInstanceChannelListener set ServletContext");
+    private EurekaServerContext eurekaServerContext;
+
+    private CodecWrapper codecWrapper;
+
+    private PeerAwareInstanceRegistry registry;
+
+    public ReplicatedInstanceChannelListener(ServletContext servletContext) {
+        this.servletContext = servletContext;
     }
 
     @Override
@@ -51,7 +57,12 @@ public class ReplicatedInstanceChannelListener implements ChannelListener {
         if (!(msg instanceof AbstractReplicatedMap.MapMessage)) {
             return;
         }
+
         AbstractReplicatedMap.MapMessage mapMessage = (AbstractReplicatedMap.MapMessage) msg;
+        if (mapMessage.getMsgType() != AbstractReplicatedMap.MapMessage.MSG_COPY) {
+            return;
+        }
+
         Object key = mapMessage.getKey();
 
         if (key instanceof String) {
@@ -59,6 +70,9 @@ public class ReplicatedInstanceChannelListener implements ChannelListener {
             if (name.startsWith("ReplicationInstance-")) {
                 String json = (String) mapMessage.getValue();
                 CodecWrapper codecWrapper = getCodecWrapper();
+                if (codecWrapper == null) {
+                    return;
+                }
                 try {
                     ReplicationInstance replicationInstance = codecWrapper.decode(json, ReplicationInstance.class);
                     PeerAwareInstanceRegistryImpl.Action action = replicationInstance.getAction();
@@ -67,8 +81,10 @@ public class ReplicatedInstanceChannelListener implements ChannelListener {
                             doRegister(replicationInstance);
                             break;
                         case Cancel:
+                            doCancel(replicationInstance);
                             break;
                         case Heartbeat:
+                            doRenew(replicationInstance);
                             break;
                     }
                 } catch (IOException e) {
@@ -81,25 +97,71 @@ public class ReplicatedInstanceChannelListener implements ChannelListener {
     private void doRegister(ReplicationInstance replicationInstance) {
         InstanceInfo instanceInfo = replicationInstance.getInstanceInfo();
         PeerAwareInstanceRegistry registry = getRegistry();
-        registry.register(instanceInfo,true);
+        if (registry == null) {
+            return;
+        }
+        registry.register(instanceInfo, true);
     }
 
-    private CodecWrapper getCodecWrapper() {
-        EurekaServerContext eurekaServerContext = (EurekaServerContext)
-                servletContext.getAttribute(EurekaServerContext.class.getName());
-        ServerCodecs serverCodecs = eurekaServerContext.getServerCodecs();
-        return serverCodecs.getCompactJsonCodec();
+    private void doCancel(ReplicationInstance replicationInstance) {
+        PeerAwareInstanceRegistry registry = getRegistry();
+        if (registry == null) {
+            return;
+        }
+        String appName = replicationInstance.getAppName();
+        String serviceInstanceId = replicationInstance.getId();
+        InstanceInfo instanceInfo = registry.getInstanceByAppAndId(appName, serviceInstanceId);
+        if (instanceInfo == null) {
+            return;
+        }
+        registry.cancel(appName, serviceInstanceId, true);
     }
 
-    private PeerAwareInstanceRegistry getRegistry() {
-        EurekaServerContext eurekaServerContext = (EurekaServerContext)
-                servletContext.getAttribute(EurekaServerContext.class.getName());
-        return eurekaServerContext.getRegistry();
+    private void doRenew(ReplicationInstance replicationInstance) {
+        synchronized (this) {
+            doCancel(replicationInstance);
+            doRegister(replicationInstance);
+        }
     }
-
 
     @Override
     public boolean accept(Serializable msg, Member sender) {
         return msg instanceof AbstractReplicatedMap.MapMessage;
     }
+
+    private CodecWrapper getCodecWrapper() {
+        CodecWrapper codecWrapper = this.codecWrapper;
+        if (codecWrapper == null) {
+            EurekaServerContext eurekaServerContext = getEurekaServerContext();
+            if (eurekaServerContext != null) {
+                ServerCodecs serverCodecs = eurekaServerContext.getServerCodecs();
+                codecWrapper = serverCodecs.getCompactJsonCodec();
+                this.codecWrapper = codecWrapper;
+            }
+        }
+        return codecWrapper;
+    }
+
+    private PeerAwareInstanceRegistry getRegistry() {
+        PeerAwareInstanceRegistry registry = this.registry;
+        if (registry == null) {
+            EurekaServerContext eurekaServerContext = getEurekaServerContext();
+            if (eurekaServerContext != null) {
+                registry = eurekaServerContext.getRegistry();
+                this.registry = registry;
+            }
+        }
+        return eurekaServerContext.getRegistry();
+    }
+
+    private EurekaServerContext getEurekaServerContext() {
+        EurekaServerContext eurekaServerContext = this.eurekaServerContext;
+        if (eurekaServerContext == null) {
+            eurekaServerContext = (EurekaServerContext)
+                    servletContext.getAttribute(EurekaServerContext.class.getName());
+            this.eurekaServerContext = eurekaServerContext;
+        }
+        return eurekaServerContext;
+    }
+
 }

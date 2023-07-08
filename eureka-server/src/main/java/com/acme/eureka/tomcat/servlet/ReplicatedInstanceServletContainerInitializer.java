@@ -14,43 +14,41 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.acme.eureka.tomcat.servlet.listener;
+package com.acme.eureka.tomcat.servlet;
 
 import com.acme.eureka.tomcat.cluster.ReplicatedInstanceChannelListener;
-import com.acme.eureka.tomcat.servlet.ReplicatedInstanceServletContainerInitializer;
 import org.apache.catalina.Cluster;
 import org.apache.catalina.Context;
 import org.apache.catalina.core.ApplicationContext;
 import org.apache.catalina.core.ContainerBase;
 import org.apache.catalina.ha.CatalinaCluster;
 import org.apache.catalina.tribes.Channel;
-import org.springframework.util.ReflectionUtils;
 
+import javax.servlet.ServletContainerInitializer;
 import javax.servlet.ServletContext;
-import javax.servlet.ServletContextEvent;
-import javax.servlet.ServletContextListener;
+import javax.servlet.ServletException;
+import java.util.Set;
+
+import static org.springframework.util.ReflectionUtils.doWithFields;
 
 /**
- * ReplicatedInstance {@link ServletContextListener}
+ * Replicated Instance {@link ServletContainerInitializer}
  *
  * @author <a href="mailto:mercyblitz@gmail.com">Mercy</a>
- * @see ReplicatedInstanceServletContainerInitializer
+ * @see ServletContainerInitializer
  * @since 1.0.0
- * @deprecated {@link ReplicatedInstanceServletContainerInitializer}
  */
-@Deprecated
-public class ReplicatedInstanceServletContextListener implements ServletContextListener {
+public class ReplicatedInstanceServletContainerInitializer implements ServletContainerInitializer {
 
     @Override
-    public void contextInitialized(ServletContextEvent event) {
-        ServletContext servletContext = event.getServletContext();
+    public void onStartup(Set<Class<?>> c, ServletContext servletContext) throws ServletException {
         Class<?> servletContextClass = servletContext.getClass();
         String className = servletContextClass.getName();
         if ("org.apache.catalina.core.ApplicationContextFacade".equals(className)) {
-            ReflectionUtils.doWithFields(servletContextClass, field -> {
+            doWithFields(servletContextClass, field -> {
                 field.setAccessible(true);
                 ApplicationContext applicationContext = (ApplicationContext) field.get(servletContext);
-                ReflectionUtils.doWithFields(applicationContext.getClass(), f -> {
+                doWithFields(applicationContext.getClass(), f -> {
                             f.setAccessible(true);
                             Context context = (Context) f.get(applicationContext);
                             if (context instanceof ContainerBase) {
@@ -68,9 +66,6 @@ public class ReplicatedInstanceServletContextListener implements ServletContextL
             }, field -> "context".equals(field.getName())
                     && ApplicationContext.class.isAssignableFrom(field.getType()));
         }
-    }
 
-    @Override
-    public void contextDestroyed(ServletContextEvent event) {
     }
 }
