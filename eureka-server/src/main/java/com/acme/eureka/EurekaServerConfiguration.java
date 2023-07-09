@@ -16,11 +16,9 @@
  */
 package com.acme.eureka;
 
-import com.acme.eureka.tomcat.cluster.ReplicatedInstanceListener;
 import com.netflix.appinfo.InstanceInfo;
 import com.netflix.discovery.converters.wrappers.CodecWrapper;
 import com.netflix.eureka.EurekaServerContext;
-import com.netflix.eureka.cluster.protocol.ReplicationInstance;
 import com.netflix.eureka.registry.PeerAwareInstanceRegistry;
 import com.netflix.eureka.registry.PeerAwareInstanceRegistryImpl;
 import com.netflix.eureka.resources.ServerCodecs;
@@ -45,10 +43,6 @@ import java.util.Map;
 
 import static com.acme.eureka.tomcat.cluster.ReplicatedInstanceListener.ACTION_METADATA_KEY;
 import static com.acme.eureka.tomcat.cluster.ReplicatedInstanceListener.REPLICATION_INSTANCE_NAME_PREFIX;
-import static com.acme.eureka.tomcat.cluster.ReplicatedInstanceListener.getReplicatedInstanceListener;
-import static com.netflix.appinfo.InstanceInfo.InstanceStatus.DOWN;
-import static com.netflix.appinfo.InstanceInfo.InstanceStatus.UP;
-import static com.netflix.eureka.cluster.protocol.ReplicationInstance.ReplicationInstanceBuilder.aReplicationInstance;
 import static com.netflix.eureka.registry.PeerAwareInstanceRegistryImpl.Action.Cancel;
 import static org.springframework.web.context.request.RequestContextHolder.getRequestAttributes;
 
@@ -73,13 +67,6 @@ public class EurekaServerConfiguration implements ServletContextAttributeListene
         initEurekaServerContext(eurekaServerContext, servletContext);
         initCodecWrapper(eurekaServerContext);
         initPeerAwareInstanceRegistry(eurekaServerContext);
-        initReplicatedInstanceListener(eurekaServerContext, servletContext);
-    }
-
-    private void initReplicatedInstanceListener(EurekaServerContext eurekaServerContext, ServletContext servletContext) {
-        ReplicatedInstanceListener listener = getReplicatedInstanceListener(servletContext);
-        listener.setEurekaServerContext(eurekaServerContext);
-        listener.setPeerAwareInstanceRegistry(this.registry);
     }
 
     private void initEurekaServerContext(EurekaServerContext eurekaServerContext,
@@ -166,48 +153,11 @@ public class EurekaServerConfiguration implements ServletContextAttributeListene
         metadata.put(ACTION_METADATA_KEY, action.name());
 
         ServletContext servletContext = request.getServletContext();
-        // ReplicationInstance replicationInstance = buildReplicationInstance(instance, action);
         String json = codecWrapper.encode(instance);
         String name = REPLICATION_INSTANCE_NAME_PREFIX + instance.getId();
         servletContext.setAttribute(name, json);
-    }
-
-    private ReplicationInstance buildReplicationInstance(InstanceInfo instance, PeerAwareInstanceRegistryImpl.Action action) {
-        ReplicationInstance.ReplicationInstanceBuilder instanceBuilder = aReplicationInstance();
-
-        instanceBuilder.withAppName(instance.getAppName())
-                .withId(instance.getId())
-                .withInstanceInfo(instance)
-                .withAction(action);
-
-        Long lastDirtyTimestamp = instance.getLastDirtyTimestamp();
-
-        if (lastDirtyTimestamp == null) {
-            lastDirtyTimestamp = instance.getLastUpdatedTimestamp();
-            instance.setLastDirtyTimestamp(lastDirtyTimestamp);
-        }
-
-        instanceBuilder.withLastDirtyTimestamp(lastDirtyTimestamp);
-
-        InstanceInfo.InstanceStatus status = instance.getStatus();
-        if (status == null) {
-            if (Cancel.equals(action)) {
-                status = DOWN;
-            } else {
-                status = UP;
-            }
-        }
-
-        instanceBuilder.withStatus(status.name());
-
-        InstanceInfo.InstanceStatus overriddenStatus = instance.getOverriddenStatus();
-        if (overriddenStatus == null) {
-            overriddenStatus = status;
-        }
-
-        instanceBuilder.withOverriddenStatus(overriddenStatus.name());
-
-        return instanceBuilder.build();
+        // remove "action" metadata after replication
+        metadata.remove(ACTION_METADATA_KEY);
     }
 
     private HttpServletRequest getHttpServletRequest() {

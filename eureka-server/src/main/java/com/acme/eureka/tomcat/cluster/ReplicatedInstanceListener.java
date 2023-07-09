@@ -83,8 +83,6 @@ public class ReplicatedInstanceListener implements ServletContextListener, Servl
 
     private volatile EurekaServerContext eurekaServerContext;
 
-    private volatile PeerAwareInstanceRegistry registry;
-
     public ReplicatedInstanceListener(ServletContext servletContext) {
         this.servletContext = servletContext;
         this.threadPoolExecutor = buildThreadPoolExecutor(servletContext);
@@ -103,20 +101,8 @@ public class ReplicatedInstanceListener implements ServletContextListener, Servl
     }
 
     public void setEurekaServerContext(EurekaServerContext eurekaServerContext) {
-        if (eurekaServerContext == null) {
-            return;
-        }
         this.eurekaServerContext = eurekaServerContext;
-        synchronized (mutex) {
-            mutex.notifyAll();
-        }
-        logger.info("EurekaServerContext is ready , the processing will be resumed");
     }
-
-    public void setPeerAwareInstanceRegistry(PeerAwareInstanceRegistry registry) {
-        this.registry = registry;
-    }
-
 
     private void processReceivedReplicationInstances(ServletContext servletContext) {
         Enumeration<String> attributeNames = servletContext.getAttributeNames();
@@ -145,7 +131,12 @@ public class ReplicatedInstanceListener implements ServletContextListener, Servl
                     eurekaServerContext = this.eurekaServerContext;
                     if (eurekaServerContext == null) {
                         eurekaServerContext = (EurekaServerContext) value;
-                        setEurekaServerContext(eurekaServerContext);
+                        this.eurekaServerContext = eurekaServerContext;
+                        synchronized (mutex) {
+                            mutex.notifyAll();
+                        }
+                        logger.info("EurekaServerContext is ready , the processing will be resumed");
+
                     }
                 }
             }
@@ -289,7 +280,8 @@ public class ReplicatedInstanceListener implements ServletContextListener, Servl
 
     private PeerAwareInstanceRegistryImpl.Action getAction(InstanceInfo replicatedInstance) {
         Map<String, String> metadata = replicatedInstance.getMetadata();
-        String actionName = metadata.get(ACTION_METADATA_KEY);
+        // remove "action" metadata after replication
+        String actionName = metadata.remove(ACTION_METADATA_KEY);
         return PeerAwareInstanceRegistryImpl.Action.valueOf(actionName);
     }
 
@@ -339,23 +331,25 @@ public class ReplicatedInstanceListener implements ServletContextListener, Servl
     }
 
     private PeerAwareInstanceRegistry getRegistry() {
-        PeerAwareInstanceRegistry registry = this.registry;
-        if (registry == null) {
-            synchronized (mutex) {
-                EurekaServerContext eurekaServerContext = getEurekaServerContext();
-                if (eurekaServerContext != null) {
-                    registry = eurekaServerContext.getRegistry();
-                    this.registry = registry;
-                }
-            }
+        EurekaServerContext eurekaServerContext = getEurekaServerContext();
+        if (eurekaServerContext != null) {
+            return eurekaServerContext.getRegistry();
         }
-        return registry;
+        return null;
     }
 
     private EurekaServerContext getEurekaServerContext() {
         EurekaServerContext eurekaServerContext = this.eurekaServerContext;
         if (eurekaServerContext == null) {
-            eurekaServerContext = (EurekaServerContext) servletContext.getAttribute(EUREKA_SERVER_CONTEXT_CLASS_NAME);
+            synchronized (mutex) {
+                eurekaServerContext = this.eurekaServerContext;
+                if (eurekaServerContext == null) {
+                    eurekaServerContext = (EurekaServerContext) servletContext.getAttribute(EUREKA_SERVER_CONTEXT_CLASS_NAME);
+                }
+                if (eurekaServerContext != null) {
+                    this.eurekaServerContext = eurekaServerContext;
+                }
+            }
         }
         return eurekaServerContext;
     }
