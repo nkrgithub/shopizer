@@ -16,7 +16,6 @@
 
     <properties>
         <packaging>jar</packaging>
-        <scope>compile</scope>
     </properties>
 
     <dependencies>
@@ -51,35 +50,6 @@
             <scope>test</scope>
         </dependency>
 
-        <!-- Apache Tomcat -->
-        <dependency>
-            <groupId>org.apache.tomcat</groupId>
-            <artifactId>tomcat-tribes</artifactId>
-            <version>${tomcat.version}</version>
-            <scope>${scope}</scope>
-        </dependency>
-
-        <dependency>
-            <groupId>org.apache.tomcat</groupId>
-            <artifactId>tomcat-catalina-ha</artifactId>
-            <version>${tomcat.version}</version>
-            <scope>${scope}</scope>
-        </dependency>
-
-        <dependency>
-            <groupId>org.apache.tomcat</groupId>
-            <artifactId>tomcat-dbcp</artifactId>
-            <version>${tomcat.version}</version>
-            <scope>${scope}</scope>
-        </dependency>
-
-        <dependency>
-            <groupId>org.apache.tomcat</groupId>
-            <artifactId>tomcat-jdbc</artifactId>
-            <version>${tomcat.version}</version>
-            <scope>${scope}</scope>
-        </dependency>
-
     </dependencies>
 
     <build>
@@ -97,6 +67,54 @@
                     <groupId>org.springframework.boot</groupId>
                     <artifactId>spring-boot-starter-tomcat</artifactId>
                 </dependency>
+                <!-- Apache Tomcat -->
+                <dependency>
+                    <groupId>org.apache.tomcat</groupId>
+                    <artifactId>tomcat-tribes</artifactId>
+                    <version>${tomcat.version}</version>
+                    <exclusions>
+                        <exclusion>
+                            <groupId>org.apache.tomcat</groupId>
+                            <artifactId>tomcat-juli</artifactId>
+                        </exclusion>
+                    </exclusions>
+                </dependency>
+
+                <dependency>
+                    <groupId>org.apache.tomcat</groupId>
+                    <artifactId>tomcat-catalina-ha</artifactId>
+                    <version>${tomcat.version}</version>
+                    <exclusions>
+                        <exclusion>
+                            <groupId>org.apache.tomcat</groupId>
+                            <artifactId>tomcat-tribes</artifactId>
+                        </exclusion>
+                        <exclusion>
+                            <groupId>org.apache.tomcat</groupId>
+                            <artifactId>tomcat-coyote</artifactId>
+                        </exclusion>
+                        <exclusion>
+                            <groupId>org.apache.tomcat</groupId>
+                            <artifactId>tomcat-catalina</artifactId>
+                        </exclusion>
+                        <exclusion>
+                            <groupId>org.apache.tomcat</groupId>
+                            <artifactId>tomcat-servlet-api</artifactId>
+                        </exclusion>
+                        <exclusion>
+                            <groupId>org.apache.tomcat</groupId>
+                            <artifactId>tomcat-juli</artifactId>
+                        </exclusion>
+                        <exclusion>
+                            <groupId>org.apache.tomcat</groupId>
+                            <artifactId>tomcat-util</artifactId>
+                        </exclusion>
+                        <exclusion>
+                            <groupId>org.apache.tomcat</groupId>
+                            <artifactId>tomcat-util-scan</artifactId>
+                        </exclusion>
+                    </exclusions>
+                </dependency>
             </dependencies>
             <build>
                 <plugins>
@@ -112,40 +130,21 @@
             <id>tomcat</id>
             <properties>
                 <packaging>war</packaging>
-                <scope>provided</scope>
             </properties>
-            <build>
-                <plugins>
-                    <plugin>
-                        <groupId>org.apache.tomcat.maven</groupId>
-                        <artifactId>tomcat7-maven-plugin</artifactId>
-                        <version>2.1</version>
-                        <executions>
-                            <execution>
-                                <id>tomcat-run</id>
-                                <goals>
-                                    <goal>exec-war-only</goal>
-                                </goals>
-                                <phase>package</phase>
-                                <configuration>
-                                    <path>/</path>
-                                    <enableNaming>true</enableNaming>
-                                    <tomcatConfigurationFilesDirectory>
-                                        src/main/webapp/META-INF/conf/
-                                    </tomcatConfigurationFilesDirectory>
-                                </configuration>
-                            </execution>
-                        </executions>
-                    </plugin>
-                </plugins>
-            </build>
-        </profile>
-
-        <profile>
-            <id>web</id>
-            <properties>
-                <packaging>war</packaging>
-            </properties>
+            <dependencies>
+                <dependency>
+                    <groupId>org.apache.tomcat</groupId>
+                    <artifactId>tomcat-tribes</artifactId>
+                    <version>${tomcat.version}</version>
+                    <scope>provided</scope>
+                </dependency>
+                <dependency>
+                    <groupId>org.apache.tomcat</groupId>
+                    <artifactId>tomcat-catalina-ha</artifactId>
+                    <version>${tomcat.version}</version>
+                    <scope>provided</scope>
+                </dependency>
+            </dependencies>
             <build>
                 <plugins>
                     <plugin>
