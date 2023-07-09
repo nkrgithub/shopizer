@@ -51,12 +51,11 @@ import org.springframework.util.StreamUtils;
 import org.springframework.util.StringValueResolver;
 import org.xml.sax.InputSource;
 
+import javax.annotation.PreDestroy;
 import javax.servlet.Servlet;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletContextAttributeEvent;
 import javax.servlet.ServletContextAttributeListener;
-import javax.servlet.ServletContextEvent;
-import javax.servlet.ServletContextListener;
 import javax.servlet.ServletException;
 import java.io.InputStream;
 import java.io.Serializable;
@@ -93,7 +92,7 @@ public class EurekaServerEmbeddedTomcatAutoConfiguration implements EmbeddedValu
     @Value("classpath:/META-INF/conf/cluster.xml")
     private Resource resource;
 
-    @Value("${microsphere.eureka.replication.timeout:15000}")
+    @Value("${microsphere.tomcat.replication.timeout:15000}")
     private int replicationTimeout;
 
     private StringValueResolver resolver;
@@ -107,7 +106,7 @@ public class EurekaServerEmbeddedTomcatAutoConfiguration implements EmbeddedValu
     private String beanName;
 
     @Bean
-    public TomcatContextCustomizer simpleTcpClusterCustomizer(ConfigurableListableBeanFactory beanFactory) {
+    public TomcatContextCustomizer installSimpleTcpClusterCustomizer(ConfigurableListableBeanFactory beanFactory) {
         return context -> {
             String[] beanNames = beanFactory.getBeanNamesForType(ServletWebServerFactory.class, false, false);
             if (ObjectUtils.isEmpty(beanNames)) {
@@ -122,59 +121,13 @@ public class EurekaServerEmbeddedTomcatAutoConfiguration implements EmbeddedValu
         };
     }
 
-    private class Listener implements ServletContextInitializer, ServletContextListener, ServletContextAttributeListener {
-
-        @Override
-        public void onStartup(ServletContext servletContext) throws ServletException {
-            servletContext.addListener(replicatedInstanceListener);
-            servletContext.addListener(this);
-        }
-
-        @Override
-        public void contextInitialized(ServletContextEvent sce) {
-        }
-
-        @Override
-        public void contextDestroyed(ServletContextEvent sce) {
-            if (replicatedMap != null) {
-                replicatedMap.breakdown();
-            }
-        }
-
-        @Override
-        public void attributeAdded(ServletContextAttributeEvent event) {
-            processAttribute(event, false);
-        }
-
-        @Override
-        public void attributeRemoved(ServletContextAttributeEvent event) {
-            processAttribute(event, true);
-        }
-
-        @Override
-        public void attributeReplaced(ServletContextAttributeEvent event) {
-            processAttribute(event, false);
-        }
-
-        private void processAttribute(ServletContextAttributeEvent event, boolean removed) {
-            if (replicatedMap == null) {
-                logger.warn("The ReplicatedMap is not ready!");
-                return;
-            }
-            Object value = event.getValue();
-            if (!(value instanceof Serializable)) {
-                return;
-            }
-
-            String name = event.getName();
-
-            if (removed) {
-                replicatedMap.remove(name, value);
-            } else {
-                replicatedMap.put(name, value);
-            }
+    @PreDestroy
+    public void destroy() {
+        if (replicatedMap != null) {
+            replicatedMap.breakdown();
         }
     }
+
 
     private void initEmbeddedTomcat(Context context) {
         Host host = (Host) context.getParent();
@@ -281,6 +234,51 @@ public class EurekaServerEmbeddedTomcatAutoConfiguration implements EmbeddedValu
     @Override
     public void objectMadePrimary(Object key, Object value) {
         // DO NOTHING
+    }
+
+    private class Listener implements ServletContextInitializer, ServletContextAttributeListener {
+
+        @Override
+        public void onStartup(ServletContext servletContext) throws ServletException {
+            servletContext.addListener(replicatedInstanceListener);
+            servletContext.addListener(this);
+        }
+
+        @Override
+        public void attributeAdded(ServletContextAttributeEvent event) {
+            processServletContextAttributeEvent(event, false);
+        }
+
+        @Override
+        public void attributeRemoved(ServletContextAttributeEvent event) {
+            processServletContextAttributeEvent(event, true);
+        }
+
+        @Override
+        public void attributeReplaced(ServletContextAttributeEvent event) {
+            processServletContextAttributeEvent(event, false);
+        }
+
+        private void processServletContextAttributeEvent(ServletContextAttributeEvent event, boolean removed) {
+            if (replicatedMap == null) {
+                logger.warn("The ReplicatedMap is not ready!");
+                return;
+            }
+            Object value = event.getValue();
+            if (!(value instanceof Serializable)) {
+                return;
+            }
+
+            String name = event.getName();
+
+            if (removed) {
+                replicatedMap.remove(name, value);
+            } else {
+                replicatedMap.put(name, value);
+            }
+            logger.info("The ServletContextAttributeEvent[name : {} , value : {} , removed : {}] has been processed!"
+                    , name, value, removed);
+        }
     }
 
 }

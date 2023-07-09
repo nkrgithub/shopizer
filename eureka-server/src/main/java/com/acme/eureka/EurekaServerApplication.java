@@ -16,13 +16,15 @@
  */
 package com.acme.eureka;
 
+import com.acme.eureka.listener.EurekaServerListener;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.SpringApplication;
-import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.boot.web.servlet.support.SpringBootServletInitializer;
 import org.springframework.cloud.netflix.eureka.server.EnableEurekaServer;
+import org.springframework.context.annotation.Import;
 import org.springframework.scheduling.annotation.EnableScheduling;
 
 
@@ -34,7 +36,8 @@ import org.springframework.scheduling.annotation.EnableScheduling;
  */
 @EnableEurekaServer
 @EnableScheduling
-@SpringBootApplication
+@EnableAutoConfiguration
+@Import(EurekaServerListener.class)
 public class EurekaServerApplication extends SpringBootServletInitializer {
 
     private static final Logger logger = LoggerFactory.getLogger(EurekaServerApplication.class);
@@ -48,19 +51,4 @@ public class EurekaServerApplication extends SpringBootServletInitializer {
         builder.sources(EurekaServerApplication.class);
         return builder;
     }
-
-    //    @Label("Hello World")
-//    @Description("Helps programmer getting started")
-//    static class HelloWorld extends Event {
-//        @Label("Message")
-//        String message;
-//    }
-//
-//    @Scheduled(fixedRate = 5000, initialDelay = 1000)
-//    public void schedule() {
-//        HelloWorld helloWorld = new HelloWorld();
-//        helloWorld.message = "Hello,World : " + new Date();
-//        helloWorld.commit();
-//        logger.info(helloWorld.message);
-//    }
 }

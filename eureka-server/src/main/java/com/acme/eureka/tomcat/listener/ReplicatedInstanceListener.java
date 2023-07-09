@@ -16,13 +16,13 @@
  */
 package com.acme.eureka.tomcat.listener;
 
+import com.acme.eureka.listener.EurekaServerListener;
 import com.netflix.appinfo.InstanceInfo;
 import com.netflix.discovery.converters.wrappers.CodecWrapper;
 import com.netflix.eureka.EurekaServerContext;
 import com.netflix.eureka.registry.PeerAwareInstanceRegistry;
 import com.netflix.eureka.registry.PeerAwareInstanceRegistryImpl;
 import com.netflix.eureka.resources.ServerCodecs;
-import org.apache.catalina.tribes.Channel;
 import org.apache.catalina.tribes.ChannelListener;
 import org.apache.catalina.tribes.Member;
 import org.apache.catalina.tribes.tipis.AbstractReplicatedMap;
@@ -43,6 +43,8 @@ import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
+
+import static com.acme.eureka.listener.EurekaServerListener.isEurekaServerContextAttributeName;
 
 /**
  * Replicated Instance Listener implements
@@ -72,10 +74,6 @@ public class ReplicatedInstanceListener implements ServletContextListener, Servl
 
     private static final String CAPACITY_PARAM_NAME = "microsphere.eureka.replicated-instance.messages.capacity";
 
-    private static final String SELF_CLASS_NAME = ReplicatedInstanceListener.class.getName();
-
-    private static final String EUREKA_SERVER_CONTEXT_CLASS_NAME = EurekaServerContext.class.getName();
-
     private final ServletContext servletContext;
 
     private final ThreadPoolExecutor threadPoolExecutor;
@@ -87,7 +85,6 @@ public class ReplicatedInstanceListener implements ServletContextListener, Servl
     public ReplicatedInstanceListener(ServletContext servletContext) {
         this.servletContext = servletContext;
         this.threadPoolExecutor = buildThreadPoolExecutor(servletContext);
-        servletContext.setAttribute(SELF_CLASS_NAME, this);
     }
 
     @Override
@@ -95,14 +92,6 @@ public class ReplicatedInstanceListener implements ServletContextListener, Servl
         threadPoolExecutor.prestartCoreThread();
         ServletContext servletContext = event.getServletContext();
         processReceivedReplicationInstances(servletContext);
-    }
-
-    public static ReplicatedInstanceListener getReplicatedInstanceListener(ServletContext servletContext) {
-        return (ReplicatedInstanceListener) servletContext.getAttribute(SELF_CLASS_NAME);
-    }
-
-    public void setEurekaServerContext(EurekaServerContext eurekaServerContext) {
-        this.eurekaServerContext = eurekaServerContext;
     }
 
     private void processReceivedReplicationInstances(ServletContext servletContext) {
@@ -125,7 +114,7 @@ public class ReplicatedInstanceListener implements ServletContextListener, Servl
         Object value = event.getValue();
         logger.info("The ServletContext attribute[name : {} , value : {}] was added!", name, value);
 
-        if (EUREKA_SERVER_CONTEXT_CLASS_NAME.equals(name)) {
+        if (isEurekaServerContextAttributeName(name)) {
             EurekaServerContext eurekaServerContext = this.eurekaServerContext;
             if (eurekaServerContext == null) {
                 synchronized (mutex) {
@@ -136,8 +125,7 @@ public class ReplicatedInstanceListener implements ServletContextListener, Servl
                         synchronized (mutex) {
                             mutex.notifyAll();
                         }
-                        logger.info("EurekaServerContext is ready , the processing will be resumed");
-
+                        logger.info("EurekaServerContext is ready , the process will be resumed");
                     }
                 }
             }
@@ -345,9 +333,7 @@ public class ReplicatedInstanceListener implements ServletContextListener, Servl
             synchronized (mutex) {
                 eurekaServerContext = this.eurekaServerContext;
                 if (eurekaServerContext == null) {
-                    eurekaServerContext = (EurekaServerContext) servletContext.getAttribute(EUREKA_SERVER_CONTEXT_CLASS_NAME);
-                }
-                if (eurekaServerContext != null) {
+                    eurekaServerContext = EurekaServerListener.getEurekaServerContext(this.servletContext);
                     this.eurekaServerContext = eurekaServerContext;
                 }
             }

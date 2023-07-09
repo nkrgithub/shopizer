@@ -17,6 +17,7 @@
 package com.acme.eureka.listener;
 
 import com.acme.eureka.EurekaServerApplication;
+import com.netflix.appinfo.EurekaInstanceConfig;
 import com.netflix.appinfo.InstanceInfo;
 import com.netflix.discovery.converters.wrappers.CodecWrapper;
 import com.netflix.eureka.EurekaServerContext;
@@ -26,18 +27,17 @@ import com.netflix.eureka.resources.ServerCodecs;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cloud.client.ServiceInstance;
 import org.springframework.cloud.netflix.eureka.server.event.EurekaInstanceCanceledEvent;
 import org.springframework.cloud.netflix.eureka.server.event.EurekaInstanceRegisteredEvent;
 import org.springframework.cloud.netflix.eureka.server.event.EurekaInstanceRenewedEvent;
-import org.springframework.context.annotation.Configuration;
 import org.springframework.context.event.EventListener;
-import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.context.request.RequestAttributes;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
 import javax.servlet.ServletContext;
-import javax.servlet.ServletContextAttributeEvent;
-import javax.servlet.ServletContextAttributeListener;
+import javax.servlet.ServletContextEvent;
+import javax.servlet.ServletContextListener;
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 import java.util.Map;
@@ -53,26 +53,41 @@ import static org.springframework.web.context.request.RequestContextHolder.getRe
  * @author <a href="mailto:mercyblitz@gmail.com">Mercy</a>
  * @since 1.0.0
  */
-@Configuration(proxyBeanMethods = false)
-public class EurekaServerListener implements ServletContextAttributeListener {
+public class EurekaServerListener implements ServletContextListener {
 
     private static final Logger logger = LoggerFactory.getLogger(EurekaServerApplication.class);
 
-    private PeerAwareInstanceRegistry registry;
+    public static final String EUREKA_SERVER_CONTEXT_ATTRIBUTE_NAME = "EurekaServerContext";
+
+    private EurekaServerContext eurekaServerContext;
+
+    private EurekaInstanceConfig eurekaInstanceConfig;
 
     private CodecWrapper codecWrapper;
 
+    private PeerAwareInstanceRegistry registry;
+
+    private ServletContext servletContext;
+
     @Autowired
-    public void init(EurekaServerContext eurekaServerContext, WebApplicationContext context) {
-        ServletContext servletContext = context.getServletContext();
-        initEurekaServerContext(eurekaServerContext, servletContext);
+    public void init(EurekaServerContext eurekaServerContext,
+                     EurekaInstanceConfig eurekaInstanceConfig) {
+        this.eurekaServerContext = eurekaServerContext;
+        this.eurekaInstanceConfig = eurekaInstanceConfig;
         initCodecWrapper(eurekaServerContext);
         initPeerAwareInstanceRegistry(eurekaServerContext);
     }
 
-    private void initEurekaServerContext(EurekaServerContext eurekaServerContext,
-                                         ServletContext servletContext) {
-        String name = EurekaServerContext.class.getName();
+    public static boolean isEurekaServerContextAttributeName(String name) {
+        return EUREKA_SERVER_CONTEXT_ATTRIBUTE_NAME.equals(name);
+    }
+
+    public static EurekaServerContext getEurekaServerContext(ServletContext servletContext) {
+        return (EurekaServerContext) servletContext.getAttribute(EUREKA_SERVER_CONTEXT_ATTRIBUTE_NAME);
+    }
+
+    private void initEurekaServerContext() {
+        String name = EUREKA_SERVER_CONTEXT_ATTRIBUTE_NAME;
         servletContext.setAttribute(name, eurekaServerContext);
         logger.info("The EurekaServerContext has been initialized into the ServletContext with name : {}", name);
     }
@@ -88,13 +103,40 @@ public class EurekaServerListener implements ServletContextAttributeListener {
         logger.info("The PeerAwareInstanceRegistry has been initialized");
     }
 
+    @Override
+    public void contextInitialized(ServletContextEvent event) {
+        this.servletContext = event.getServletContext();
+        initEurekaServerContext();
+    }
+
+    @Override
+    public void contextDestroyed(ServletContextEvent event) {
+        deregister();
+    }
+
+    private void deregister() {
+        String appName = eurekaInstanceConfig.getAppname().toUpperCase();
+        String id = eurekaInstanceConfig.getInstanceId();
+        InstanceInfo instance = registry.getInstanceByAppAndId(appName, id);
+        if (instance == null) {
+            logger.warn("No InstanceInfo was found by appName : {} and id : {}!", appName, id);
+            return;
+        }
+        try {
+            doReplicateInstance(instance, Cancel);
+            logger.info("The current instance[appName : {} , id : {}] was deregistered!", appName, id);
+        } catch (IOException e) {
+            logger.error(e.getMessage(), e);
+        }
+    }
+
     @EventListener(EurekaInstanceRegisteredEvent.class)
     public void onEurekaInstanceRegisteredEvent(EurekaInstanceRegisteredEvent event) throws Throwable {
         if (event.isReplication()) {
             return;
         }
         InstanceInfo instance = event.getInstanceInfo();
-        replicateInstanceInfo(instance, PeerAwareInstanceRegistryImpl.Action.Register);
+        replicateInstance(instance, PeerAwareInstanceRegistryImpl.Action.Register);
     }
 
     @EventListener(EurekaInstanceCanceledEvent.class)
@@ -105,7 +147,7 @@ public class EurekaServerListener implements ServletContextAttributeListener {
         String appName = event.getAppName();
         String serviceInstanceId = event.getServerId();
         InstanceInfo instance = registry.getInstanceByAppAndId(appName, serviceInstanceId);
-        replicateInstanceInfo(instance, Cancel);
+        replicateInstance(instance, Cancel);
     }
 
     @EventListener(EurekaInstanceRenewedEvent.class)
@@ -114,51 +156,32 @@ public class EurekaServerListener implements ServletContextAttributeListener {
             return;
         }
         InstanceInfo instance = event.getInstanceInfo();
-        replicateInstanceInfo(instance, PeerAwareInstanceRegistryImpl.Action.Heartbeat);
+        replicateInstance(instance, PeerAwareInstanceRegistryImpl.Action.Heartbeat);
     }
 
-    @Override
-    public void attributeAdded(ServletContextAttributeEvent event) {
-        ServletContext servletContext = event.getServletContext();
-        String name = event.getName();
-        Object value = event.getValue();
-        servletContext.log("ServletContext's attribute[name : " + name + " , value : " + value + "] was added");
-    }
-
-    @Override
-    public void attributeRemoved(ServletContextAttributeEvent event) {
-        ServletContext servletContext = event.getServletContext();
-        String name = event.getName();
-        Object value = event.getValue();
-        servletContext.log("ServletContext's attribute[name : " + name + " , value : " + value + "] was removed");
-    }
-
-    @Override
-    public void attributeReplaced(ServletContextAttributeEvent event) {
-        ServletContext servletContext = event.getServletContext();
-        String name = event.getName();
-        Object value = event.getValue();
-        servletContext.log("ServletContext's attribute[name : " + name + " , value : " + value + "] was replaced");
-    }
-
-    private void replicateInstanceInfo(InstanceInfo instance, PeerAwareInstanceRegistryImpl.Action action) throws IOException {
-        if (instance == null) {
-            return;
-        }
+    private void replicateInstance(InstanceInfo instance, PeerAwareInstanceRegistryImpl.Action action) throws IOException {
         HttpServletRequest request = getHttpServletRequest();
         if (request == null) {
             return;
         }
+        doReplicateInstance(instance, action);
+    }
 
+    private void doReplicateInstance(InstanceInfo instance, PeerAwareInstanceRegistryImpl.Action action) throws IOException {
+        if (instance == null) {
+            return;
+        }
         Map<String, String> metadata = instance.getMetadata();
         metadata.put(ACTION_METADATA_KEY, action.name());
 
-        ServletContext servletContext = request.getServletContext();
+        ServletContext servletContext = this.servletContext;
         String json = codecWrapper.encode(instance);
         String name = REPLICATION_INSTANCE_NAME_PREFIX + instance.getId();
         servletContext.setAttribute(name, json);
         // remove "action" metadata after replication
         metadata.remove(ACTION_METADATA_KEY);
+        logger.info("InstanceInfo[appName : {} , id : {} , action : {}] has been replicated as the JSON : {}",
+                instance.getAppName(), instance.getId(), action, json);
     }
 
     private HttpServletRequest getHttpServletRequest() {
@@ -171,5 +194,4 @@ public class EurekaServerListener implements ServletContextAttributeListener {
         // Non-Web Request
         return null;
     }
-
 }
