@@ -16,28 +16,40 @@
  */
 package com.acme.eureka;
 
+import com.acme.eureka.tomcat.cluster.ReplicatedInstanceListener;
 import com.netflix.appinfo.InstanceInfo;
 import com.netflix.discovery.converters.wrappers.CodecWrapper;
+import com.netflix.eureka.EurekaServerContext;
 import com.netflix.eureka.cluster.protocol.ReplicationInstance;
 import com.netflix.eureka.registry.PeerAwareInstanceRegistry;
 import com.netflix.eureka.registry.PeerAwareInstanceRegistryImpl;
 import com.netflix.eureka.resources.ServerCodecs;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cloud.netflix.eureka.server.event.EurekaInstanceCanceledEvent;
 import org.springframework.cloud.netflix.eureka.server.event.EurekaInstanceRegisteredEvent;
 import org.springframework.cloud.netflix.eureka.server.event.EurekaInstanceRenewedEvent;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.event.EventListener;
+import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.context.request.RequestAttributes;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
-import javax.annotation.PostConstruct;
 import javax.servlet.ServletContext;
+import javax.servlet.ServletContextAttributeEvent;
+import javax.servlet.ServletContextAttributeListener;
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
+import java.util.Map;
 
-import static com.acme.eureka.tomcat.cluster.ReplicatedInstanceChannelListener.REPLICATION_INSTANCE_NAME_PREFIX;
+import static com.acme.eureka.tomcat.cluster.ReplicatedInstanceListener.ACTION_METADATA_KEY;
+import static com.acme.eureka.tomcat.cluster.ReplicatedInstanceListener.REPLICATION_INSTANCE_NAME_PREFIX;
+import static com.acme.eureka.tomcat.cluster.ReplicatedInstanceListener.getReplicatedInstanceListener;
+import static com.netflix.appinfo.InstanceInfo.InstanceStatus.DOWN;
+import static com.netflix.appinfo.InstanceInfo.InstanceStatus.UP;
 import static com.netflix.eureka.cluster.protocol.ReplicationInstance.ReplicationInstanceBuilder.aReplicationInstance;
+import static com.netflix.eureka.registry.PeerAwareInstanceRegistryImpl.Action.Cancel;
 import static org.springframework.web.context.request.RequestContextHolder.getRequestAttributes;
 
 /**
@@ -47,19 +59,45 @@ import static org.springframework.web.context.request.RequestContextHolder.getRe
  * @since 1.0.0
  */
 @Configuration(proxyBeanMethods = false)
-public class EurekaServerConfiguration {
+public class EurekaServerConfiguration implements ServletContextAttributeListener {
 
-    @Autowired
-    private PeerAwareInstanceRegistry instanceRegistry;
+    private static final Logger logger = LoggerFactory.getLogger(EurekaServerApplication.class);
 
-    @Autowired
-    private ServerCodecs serverCodecs;
+    private PeerAwareInstanceRegistry registry;
 
     private CodecWrapper codecWrapper;
 
-    @PostConstruct
-    public void init() {
-        this.codecWrapper = serverCodecs.getCompactJsonCodec();
+    @Autowired
+    public void init(EurekaServerContext eurekaServerContext, WebApplicationContext context) {
+        ServletContext servletContext = context.getServletContext();
+        initEurekaServerContext(eurekaServerContext, servletContext);
+        initCodecWrapper(eurekaServerContext);
+        initPeerAwareInstanceRegistry(eurekaServerContext);
+        initReplicatedInstanceListener(eurekaServerContext, servletContext);
+    }
+
+    private void initReplicatedInstanceListener(EurekaServerContext eurekaServerContext, ServletContext servletContext) {
+        ReplicatedInstanceListener listener = getReplicatedInstanceListener(servletContext);
+        listener.setEurekaServerContext(eurekaServerContext);
+        listener.setPeerAwareInstanceRegistry(this.registry);
+    }
+
+    private void initEurekaServerContext(EurekaServerContext eurekaServerContext,
+                                         ServletContext servletContext) {
+        String name = EurekaServerContext.class.getName();
+        servletContext.setAttribute(name, eurekaServerContext);
+        logger.info("The EurekaServerContext has been initialized into the ServletContext with name : {}", name);
+    }
+
+    private void initCodecWrapper(EurekaServerContext eurekaServerContext) {
+        ServerCodecs serverCodecs = eurekaServerContext.getServerCodecs();
+        this.codecWrapper = serverCodecs.getFullJsonCodec();
+        logger.info("The CodecWrapper has been initialized");
+    }
+
+    private void initPeerAwareInstanceRegistry(EurekaServerContext eurekaServerContext) {
+        this.registry = eurekaServerContext.getRegistry();
+        logger.info("The PeerAwareInstanceRegistry has been initialized");
     }
 
     @EventListener(EurekaInstanceRegisteredEvent.class)
@@ -78,8 +116,8 @@ public class EurekaServerConfiguration {
         }
         String appName = event.getAppName();
         String serviceInstanceId = event.getServerId();
-        InstanceInfo instance = instanceRegistry.getInstanceByAppAndId(appName, serviceInstanceId);
-        replicateInstanceInfo(instance, PeerAwareInstanceRegistryImpl.Action.Cancel);
+        InstanceInfo instance = registry.getInstanceByAppAndId(appName, serviceInstanceId);
+        replicateInstanceInfo(instance, Cancel);
     }
 
     @EventListener(EurekaInstanceRenewedEvent.class)
@@ -91,6 +129,30 @@ public class EurekaServerConfiguration {
         replicateInstanceInfo(instance, PeerAwareInstanceRegistryImpl.Action.Heartbeat);
     }
 
+    @Override
+    public void attributeAdded(ServletContextAttributeEvent event) {
+        ServletContext servletContext = event.getServletContext();
+        String name = event.getName();
+        Object value = event.getValue();
+        servletContext.log("ServletContext's attribute[name : " + name + " , value : " + value + "] was added");
+    }
+
+    @Override
+    public void attributeRemoved(ServletContextAttributeEvent event) {
+        ServletContext servletContext = event.getServletContext();
+        String name = event.getName();
+        Object value = event.getValue();
+        servletContext.log("ServletContext's attribute[name : " + name + " , value : " + value + "] was removed");
+    }
+
+    @Override
+    public void attributeReplaced(ServletContextAttributeEvent event) {
+        ServletContext servletContext = event.getServletContext();
+        String name = event.getName();
+        Object value = event.getValue();
+        servletContext.log("ServletContext's attribute[name : " + name + " , value : " + value + "] was replaced");
+    }
+
     private void replicateInstanceInfo(InstanceInfo instance, PeerAwareInstanceRegistryImpl.Action action) throws IOException {
         if (instance == null) {
             return;
@@ -99,23 +161,53 @@ public class EurekaServerConfiguration {
         if (request == null) {
             return;
         }
+
+        Map<String, String> metadata = instance.getMetadata();
+        metadata.put(ACTION_METADATA_KEY, action.name());
+
         ServletContext servletContext = request.getServletContext();
-        ReplicationInstance replicationInstance = buildReplicationInstance(instance, action);
-        String json = codecWrapper.encode(replicationInstance);
+        // ReplicationInstance replicationInstance = buildReplicationInstance(instance, action);
+        String json = codecWrapper.encode(instance);
         String name = REPLICATION_INSTANCE_NAME_PREFIX + instance.getId();
         servletContext.setAttribute(name, json);
     }
 
     private ReplicationInstance buildReplicationInstance(InstanceInfo instance, PeerAwareInstanceRegistryImpl.Action action) {
-        ReplicationInstance replicationInstance = aReplicationInstance()
-                .withAppName(instance.getAppName())
+        ReplicationInstance.ReplicationInstanceBuilder instanceBuilder = aReplicationInstance();
+
+        instanceBuilder.withAppName(instance.getAppName())
                 .withId(instance.getId())
-                .withLastDirtyTimestamp(instance.getLastDirtyTimestamp())
-                .withStatus(instance.getStatus().name())
                 .withInstanceInfo(instance)
-                .withAction(action)
-                .build();
-        return replicationInstance;
+                .withAction(action);
+
+        Long lastDirtyTimestamp = instance.getLastDirtyTimestamp();
+
+        if (lastDirtyTimestamp == null) {
+            lastDirtyTimestamp = instance.getLastUpdatedTimestamp();
+            instance.setLastDirtyTimestamp(lastDirtyTimestamp);
+        }
+
+        instanceBuilder.withLastDirtyTimestamp(lastDirtyTimestamp);
+
+        InstanceInfo.InstanceStatus status = instance.getStatus();
+        if (status == null) {
+            if (Cancel.equals(action)) {
+                status = DOWN;
+            } else {
+                status = UP;
+            }
+        }
+
+        instanceBuilder.withStatus(status.name());
+
+        InstanceInfo.InstanceStatus overriddenStatus = instance.getOverriddenStatus();
+        if (overriddenStatus == null) {
+            overriddenStatus = status;
+        }
+
+        instanceBuilder.withOverriddenStatus(overriddenStatus.name());
+
+        return instanceBuilder.build();
     }
 
     private HttpServletRequest getHttpServletRequest() {
@@ -128,4 +220,5 @@ public class EurekaServerConfiguration {
         // Non-Web Request
         return null;
     }
+
 }

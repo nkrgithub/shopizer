@@ -16,7 +16,7 @@
  */
 package com.acme.eureka.tomcat.servlet.listener;
 
-import com.acme.eureka.tomcat.cluster.ReplicatedInstanceChannelListener;
+import com.acme.eureka.tomcat.cluster.ReplicatedInstanceListener;
 import com.acme.eureka.tomcat.servlet.ReplicatedInstanceServletContainerInitializer;
 import org.apache.catalina.Cluster;
 import org.apache.catalina.Context;
@@ -59,7 +59,7 @@ public class ReplicatedInstanceServletContextListener implements ServletContextL
                                 if (cluster instanceof CatalinaCluster) {
                                     CatalinaCluster catalinaCluster = (CatalinaCluster) cluster;
                                     Channel channel = catalinaCluster.getChannel();
-                                    channel.addChannelListener(new ReplicatedInstanceChannelListener(servletContext));
+                                    channel.addChannelListener(new ReplicatedInstanceListener(servletContext));
                                 }
                             }
                         },

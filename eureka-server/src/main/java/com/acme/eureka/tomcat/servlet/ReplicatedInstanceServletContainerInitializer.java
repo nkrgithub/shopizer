@@ -16,14 +16,13 @@
  */
 package com.acme.eureka.tomcat.servlet;
 
-import com.acme.eureka.tomcat.cluster.ReplicatedInstanceChannelListener;
+import com.acme.eureka.tomcat.cluster.ReplicatedInstanceListener;
 import org.apache.catalina.Cluster;
 import org.apache.catalina.Context;
 import org.apache.catalina.core.ApplicationContext;
 import org.apache.catalina.core.ContainerBase;
 import org.apache.catalina.ha.CatalinaCluster;
 import org.apache.catalina.tribes.Channel;
-import org.springframework.util.ReflectionUtils;
 
 import javax.servlet.ServletContainerInitializer;
 import javax.servlet.ServletContext;
@@ -59,7 +58,9 @@ public class ReplicatedInstanceServletContainerInitializer implements ServletCon
                                 if (cluster instanceof CatalinaCluster) {
                                     CatalinaCluster catalinaCluster = (CatalinaCluster) cluster;
                                     Channel channel = catalinaCluster.getChannel();
-                                    channel.addChannelListener(new ReplicatedInstanceChannelListener(servletContext));
+                                    ReplicatedInstanceListener listener = new ReplicatedInstanceListener(servletContext);
+                                    servletContext.addListener(listener);
+                                    channel.addChannelListener(listener);
                                 }
                             }
                         },
@@ -68,6 +69,5 @@ public class ReplicatedInstanceServletContainerInitializer implements ServletCon
             }, field -> "context".equals(field.getName())
                     && ApplicationContext.class.isAssignableFrom(field.getType()));
         }
-
     }
 }

@@ -41,7 +41,7 @@ import java.util.function.Function;
  */
 @RestController
 @RequestMapping("/replicated")
-public class ReplicatedController implements ServletContextAttributeListener, HttpSessionAttributeListener {
+public class ReplicatedController  {
 
     @GetMapping("/context/set/{name}/{value}")
     public String setServletContextAttributes(@PathVariable String name, @PathVariable String value,
@@ -82,43 +82,5 @@ public class ReplicatedController implements ServletContextAttributeListener, Ht
             }
         }
         return attributes;
-    }
-
-    @Override
-    public void attributeAdded(ServletContextAttributeEvent event) {
-        ServletContext servletContext = event.getServletContext();
-        String name = event.getName();
-        Object value = event.getValue();
-        servletContext.log("ServletContext attribute name : " + name + " , value : " + value);
-    }
-
-    @Override
-    public void attributeRemoved(ServletContextAttributeEvent event) {
-        // DO NOTHING
-    }
-
-    @Override
-    public void attributeReplaced(ServletContextAttributeEvent event) {
-        // DO NOTHING
-    }
-
-    @Override
-    public void attributeAdded(HttpSessionBindingEvent event) {
-        HttpSession session = event.getSession();
-        ServletContext servletContext = session.getServletContext();
-        String name = event.getName();
-        Object value = event.getValue();
-        servletContext.log("HttpSession attribute name : " + name + " , value : " + value);
-    }
-
-
-    @Override
-    public void attributeRemoved(HttpSessionBindingEvent event) {
-        // DO NOTHING
-    }
-
-    @Override
-    public void attributeReplaced(HttpSessionBindingEvent event) {
-        // DO NOTHING
     }
 }
