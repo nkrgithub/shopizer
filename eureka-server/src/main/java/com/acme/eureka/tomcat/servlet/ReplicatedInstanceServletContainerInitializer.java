@@ -16,19 +16,27 @@
  */
 package com.acme.eureka.tomcat.servlet;
 
+import com.acme.eureka.listener.EurekaServerListener;
 import com.acme.eureka.tomcat.listener.ReplicatedInstanceListener;
 import org.apache.catalina.Cluster;
+import org.apache.catalina.Container;
 import org.apache.catalina.Context;
+import org.apache.catalina.Engine;
+import org.apache.catalina.Host;
+import org.apache.catalina.Lifecycle;
+import org.apache.catalina.Service;
 import org.apache.catalina.core.ApplicationContext;
-import org.apache.catalina.core.ContainerBase;
 import org.apache.catalina.ha.CatalinaCluster;
 import org.apache.catalina.tribes.Channel;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.servlet.ServletContainerInitializer;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import java.util.Set;
 
+import static com.acme.eureka.listener.EurekaServerListener.getEurekaServerListener;
 import static org.springframework.util.ReflectionUtils.doWithFields;
 import static org.springframework.util.ReflectionUtils.makeAccessible;
 
@@ -41,6 +49,8 @@ import static org.springframework.util.ReflectionUtils.makeAccessible;
  */
 public class ReplicatedInstanceServletContainerInitializer implements ServletContainerInitializer {
 
+    private static final Logger logger = LoggerFactory.getLogger(ReplicatedInstanceServletContainerInitializer.class);
+
     @Override
     public void onStartup(Set<Class<?>> c, ServletContext servletContext) throws ServletException {
         Class<?> servletContextClass = servletContext.getClass();
@@ -52,16 +62,10 @@ public class ReplicatedInstanceServletContainerInitializer implements ServletCon
                 doWithFields(applicationContext.getClass(), f -> {
                             makeAccessible(f);
                             Context context = (Context) f.get(applicationContext);
-                            if (context instanceof ContainerBase) {
-                                ContainerBase containerBase = (ContainerBase) context;
-                                Cluster cluster = containerBase.getCluster();
-                                if (cluster instanceof CatalinaCluster) {
-                                    CatalinaCluster catalinaCluster = (CatalinaCluster) cluster;
-                                    Channel channel = catalinaCluster.getChannel();
-                                    ReplicatedInstanceListener listener = new ReplicatedInstanceListener(servletContext);
-                                    servletContext.addListener(listener);
-                                    channel.addChannelListener(listener);
-                                }
+                            if (context != null) {
+                                Cluster cluster = context.getCluster();
+                                initCluster(cluster, servletContext);
+                                initService(context, servletContext);
                             }
                         },
                         f -> "context".equals(f.getName())
@@ -69,5 +73,48 @@ public class ReplicatedInstanceServletContainerInitializer implements ServletCon
             }, field -> "context".equals(field.getName())
                     && ApplicationContext.class.isAssignableFrom(field.getType()));
         }
+    }
+
+    private void initCluster(Cluster cluster, ServletContext servletContext) {
+        if (cluster instanceof CatalinaCluster) {
+            CatalinaCluster catalinaCluster = (CatalinaCluster) cluster;
+            Channel channel = catalinaCluster.getChannel();
+            ReplicatedInstanceListener listener = new ReplicatedInstanceListener(servletContext);
+            servletContext.addListener(listener);
+            channel.addChannelListener(listener);
+            logger.info("The ReplicatedInstanceListener was added");
+        }
+    }
+
+    private void initService(Context context, ServletContext servletContext) {
+        final Service service = findService(context);
+        if (service != null) {
+            service.addLifecycleListener(event -> {
+                Object source = event.getSource();
+                if (source == service) {
+                    String type = event.getType();
+                    if (Lifecycle.BEFORE_STOP_EVENT.equals(type)) {
+                        EurekaServerListener eurekaServerListener = getEurekaServerListener(servletContext);
+                        eurekaServerListener.deregister();
+                    }
+                }
+            });
+            logger.info("The LifecycleListener was added");
+        }
+    }
+
+    private Service findService(Context context) {
+        Service service = null;
+
+        Container parent = context.getParent();
+        if (parent instanceof Host) {
+            parent = parent.getParent();
+            if (parent instanceof Engine) {
+                Engine engine = (Engine) parent;
+                service = engine.getService();
+            }
+        }
+
+        return service;
     }
 }

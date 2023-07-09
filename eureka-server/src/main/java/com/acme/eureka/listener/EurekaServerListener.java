@@ -27,10 +27,11 @@ import com.netflix.eureka.resources.ServerCodecs;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cloud.client.ServiceInstance;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cloud.netflix.eureka.server.event.EurekaInstanceCanceledEvent;
 import org.springframework.cloud.netflix.eureka.server.event.EurekaInstanceRegisteredEvent;
 import org.springframework.cloud.netflix.eureka.server.event.EurekaInstanceRenewedEvent;
+import org.springframework.context.event.ContextClosedEvent;
 import org.springframework.context.event.EventListener;
 import org.springframework.web.context.request.RequestAttributes;
 import org.springframework.web.context.request.ServletRequestAttributes;
@@ -57,6 +58,8 @@ public class EurekaServerListener implements ServletContextListener {
 
     private static final Logger logger = LoggerFactory.getLogger(EurekaServerApplication.class);
 
+    public static final String EUREKA_SERVER_LISTENER_ATTRIBUTE_NAME = "EurekaServerListener";
+
     public static final String EUREKA_SERVER_CONTEXT_ATTRIBUTE_NAME = "EurekaServerContext";
 
     private EurekaServerContext eurekaServerContext;
@@ -68,6 +71,11 @@ public class EurekaServerListener implements ServletContextListener {
     private PeerAwareInstanceRegistry registry;
 
     private ServletContext servletContext;
+
+    private volatile boolean deregistered = false;
+
+    @Value(("${microsphere.eureka.instance.deregister.delay:5}"))
+    private long deregisterDelay;
 
     @Autowired
     public void init(EurekaServerContext eurekaServerContext,
@@ -84,6 +92,10 @@ public class EurekaServerListener implements ServletContextListener {
 
     public static EurekaServerContext getEurekaServerContext(ServletContext servletContext) {
         return (EurekaServerContext) servletContext.getAttribute(EUREKA_SERVER_CONTEXT_ATTRIBUTE_NAME);
+    }
+
+    public static EurekaServerListener getEurekaServerListener(ServletContext servletContext) {
+        return (EurekaServerListener) servletContext.getAttribute(EUREKA_SERVER_LISTENER_ATTRIBUTE_NAME);
     }
 
     private void initEurekaServerContext() {
@@ -106,6 +118,7 @@ public class EurekaServerListener implements ServletContextListener {
     @Override
     public void contextInitialized(ServletContextEvent event) {
         this.servletContext = event.getServletContext();
+        this.servletContext.setAttribute(EUREKA_SERVER_LISTENER_ATTRIBUTE_NAME, this);
         initEurekaServerContext();
     }
 
@@ -114,7 +127,10 @@ public class EurekaServerListener implements ServletContextListener {
         deregister();
     }
 
-    private void deregister() {
+    public void deregister() {
+        if (deregistered) {
+            return;
+        }
         String appName = eurekaInstanceConfig.getAppname().toUpperCase();
         String id = eurekaInstanceConfig.getInstanceId();
         InstanceInfo instance = registry.getInstanceByAppAndId(appName, id);
@@ -123,11 +139,15 @@ public class EurekaServerListener implements ServletContextListener {
             return;
         }
         try {
-            doReplicateInstance(instance, Cancel);
-            logger.info("The current instance[appName : {} , id : {}] was deregistered!", appName, id);
-        } catch (IOException e) {
+            for (int i = 0; i < deregisterDelay; i++) {
+                doReplicateInstance(instance, Cancel);
+                Thread.sleep(1000L);
+            }
+            logger.info("The current instance[appName : {} , id : {}] was deregistered before {}s!", appName, id, deregisterDelay);
+        } catch (Throwable e) {
             logger.error(e.getMessage(), e);
         }
+        deregistered = true;
     }
 
     @EventListener(EurekaInstanceRegisteredEvent.class)
@@ -160,17 +180,19 @@ public class EurekaServerListener implements ServletContextListener {
     }
 
     private void replicateInstance(InstanceInfo instance, PeerAwareInstanceRegistryImpl.Action action) throws IOException {
+        if (instance == null) {
+            return;
+        }
         HttpServletRequest request = getHttpServletRequest();
         if (request == null) {
             return;
         }
         doReplicateInstance(instance, action);
+        logger.info("InstanceInfo[appName : {} , id : {} , action : {}] has been replicated",
+                instance.getAppName(), instance.getId(), action);
     }
 
     private void doReplicateInstance(InstanceInfo instance, PeerAwareInstanceRegistryImpl.Action action) throws IOException {
-        if (instance == null) {
-            return;
-        }
         Map<String, String> metadata = instance.getMetadata();
         metadata.put(ACTION_METADATA_KEY, action.name());
 
@@ -180,8 +202,6 @@ public class EurekaServerListener implements ServletContextListener {
         servletContext.setAttribute(name, json);
         // remove "action" metadata after replication
         metadata.remove(ACTION_METADATA_KEY);
-        logger.info("InstanceInfo[appName : {} , id : {} , action : {}] has been replicated as the JSON : {}",
-                instance.getAppName(), instance.getId(), action, json);
     }
 
     private HttpServletRequest getHttpServletRequest() {
