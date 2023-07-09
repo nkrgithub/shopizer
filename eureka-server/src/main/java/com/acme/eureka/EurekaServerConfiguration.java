@@ -36,6 +36,7 @@ import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 
+import static com.acme.eureka.tomcat.cluster.ReplicatedInstanceChannelListener.REPLICATION_INSTANCE_NAME_PREFIX;
 import static com.netflix.eureka.cluster.protocol.ReplicationInstance.ReplicationInstanceBuilder.aReplicationInstance;
 import static org.springframework.web.context.request.RequestContextHolder.getRequestAttributes;
 
@@ -101,7 +102,7 @@ public class EurekaServerConfiguration {
         ServletContext servletContext = request.getServletContext();
         ReplicationInstance replicationInstance = buildReplicationInstance(instance, action);
         String json = codecWrapper.encode(replicationInstance);
-        String name = "ReplicationInstance-" + instance.getId();
+        String name = REPLICATION_INSTANCE_NAME_PREFIX + instance.getId();
         servletContext.setAttribute(name, json);
     }
 
