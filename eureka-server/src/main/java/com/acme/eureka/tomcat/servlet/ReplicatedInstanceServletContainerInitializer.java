@@ -16,7 +16,7 @@
  */
 package com.acme.eureka.tomcat.servlet;
 
-import com.acme.eureka.tomcat.cluster.ReplicatedInstanceListener;
+import com.acme.eureka.tomcat.listener.ReplicatedInstanceListener;
 import org.apache.catalina.Cluster;
 import org.apache.catalina.Context;
 import org.apache.catalina.core.ApplicationContext;

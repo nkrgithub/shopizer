@@ -14,8 +14,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.acme.eureka;
+package com.acme.eureka.listener;
 
+import com.acme.eureka.EurekaServerApplication;
 import com.netflix.appinfo.InstanceInfo;
 import com.netflix.discovery.converters.wrappers.CodecWrapper;
 import com.netflix.eureka.EurekaServerContext;
@@ -41,19 +42,19 @@ import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 import java.util.Map;
 
-import static com.acme.eureka.tomcat.cluster.ReplicatedInstanceListener.ACTION_METADATA_KEY;
-import static com.acme.eureka.tomcat.cluster.ReplicatedInstanceListener.REPLICATION_INSTANCE_NAME_PREFIX;
+import static com.acme.eureka.tomcat.listener.ReplicatedInstanceListener.ACTION_METADATA_KEY;
+import static com.acme.eureka.tomcat.listener.ReplicatedInstanceListener.REPLICATION_INSTANCE_NAME_PREFIX;
 import static com.netflix.eureka.registry.PeerAwareInstanceRegistryImpl.Action.Cancel;
 import static org.springframework.web.context.request.RequestContextHolder.getRequestAttributes;
 
 /**
- * Customized EurekaServer {@link Configuration @Configuration}
+ * Customized EurekaServer Listener
  *
  * @author <a href="mailto:mercyblitz@gmail.com">Mercy</a>
  * @since 1.0.0
  */
 @Configuration(proxyBeanMethods = false)
-public class EurekaServerConfiguration implements ServletContextAttributeListener {
+public class EurekaServerListener implements ServletContextAttributeListener {
 
     private static final Logger logger = LoggerFactory.getLogger(EurekaServerApplication.class);
 
