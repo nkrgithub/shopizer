@@ -31,7 +31,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cloud.netflix.eureka.server.event.EurekaInstanceCanceledEvent;
 import org.springframework.cloud.netflix.eureka.server.event.EurekaInstanceRegisteredEvent;
 import org.springframework.cloud.netflix.eureka.server.event.EurekaInstanceRenewedEvent;
-import org.springframework.context.event.ContextClosedEvent;
 import org.springframework.context.event.EventListener;
 import org.springframework.web.context.request.RequestAttributes;
 import org.springframework.web.context.request.ServletRequestAttributes;
@@ -74,7 +73,7 @@ public class EurekaServerListener implements ServletContextListener {
 
     private volatile boolean deregistered = false;
 
-    @Value(("${microsphere.eureka.instance.deregister.delay:5}"))
+    @Value(("${microsphere.eureka.instance.deregister.delay:3}"))
     private long deregisterDelay;
 
     @Autowired
