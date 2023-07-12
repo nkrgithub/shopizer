@@ -31,7 +31,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cloud.netflix.eureka.server.event.EurekaInstanceCanceledEvent;
 import org.springframework.cloud.netflix.eureka.server.event.EurekaInstanceRegisteredEvent;
 import org.springframework.cloud.netflix.eureka.server.event.EurekaInstanceRenewedEvent;
-import org.springframework.context.event.ContextClosedEvent;
 import org.springframework.context.event.EventListener;
 import org.springframework.web.context.request.RequestAttributes;
 import org.springframework.web.context.request.ServletRequestAttributes;
@@ -200,8 +199,9 @@ public class EurekaServerListener implements ServletContextListener {
         String json = codecWrapper.encode(instance);
         String name = REPLICATION_INSTANCE_NAME_PREFIX + instance.getId();
         servletContext.setAttribute(name, json);
-        // remove "action" metadata after replication
+        // remove "action" metadata and attribute after replication
         metadata.remove(ACTION_METADATA_KEY);
+        servletContext.removeAttribute(name);
     }
 
     private HttpServletRequest getHttpServletRequest() {
