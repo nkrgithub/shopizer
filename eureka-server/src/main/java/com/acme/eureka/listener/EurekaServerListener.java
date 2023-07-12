@@ -73,7 +73,7 @@ public class EurekaServerListener implements ServletContextListener {
 
     private volatile boolean deregistered = false;
 
-    @Value(("${microsphere.eureka.instance.deregister.delay:5}"))
+    @Value(("${microsphere.eureka.instance.deregister.delay:3}"))
     private long deregisterDelay;
 
     @Autowired
