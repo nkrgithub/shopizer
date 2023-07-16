@@ -13,8 +13,7 @@ import java.util.Set;
 
 
 @Service("groupService")
-public class GroupServiceImpl extends SalesManagerEntityServiceImpl<Integer, Group>
-        implements GroupService {
+public class GroupServiceImpl extends SalesManagerEntityServiceImpl<Integer, Group> implements GroupService {
 
     private final GroupRepository groupRepository;
 
@@ -22,7 +21,6 @@ public class GroupServiceImpl extends SalesManagerEntityServiceImpl<Integer, Gro
         super(groupRepository);
         this.groupRepository = groupRepository;
     }
-
 
     @Override
     public List<Group> listGroup(GroupType groupType) throws ServiceException {

@@ -149,6 +149,12 @@
             <artifactId>spring-cloud-alibaba-sentinel-datasource</artifactId>
         </dependency>
 
+        <!-- HikariCP -->
+        <dependency>
+            <groupId>com.zaxxer</groupId>
+            <artifactId>HikariCP</artifactId>
+        </dependency>
+
 
     </dependencies>
 
