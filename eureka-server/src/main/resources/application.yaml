@@ -6,9 +6,9 @@ server:
   port: 12345 # Eureka Port
   shutdown: GRACEFUL
   http2:
-    enabled: true
+    enabled: false
   ssl:
-    enabled: true
+    enabled: false
     key-store: classpath:keystore/eureka.p12
     key-store-password: 123456
     key-store-type: PKCS12

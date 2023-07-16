@@ -1,0 +1,44 @@
+syntax = "proto3";
+
+package shopizer.security;
+
+option java_package = "com.salesmanager.shop.security.v2.api.proto";
+option java_outer_classname = "ServiceDiscoveryOuter";
+
+service SecurityApi {
+
+  rpc listPermissions (GroupNameRequest) returns (ReadablePermissionResponse) {}
+
+  rpc permissions(EmptyRequest) returns (ReadablePermissionResponse) {}
+
+  rpc groups(EmptyRequest) returns (ReadablePermissionResponse) {}
+}
+
+message ReadablePermission {
+  string id = 1;
+  string name = 2;
+}
+
+message ReadableGroup {
+  string id = 1;
+  string name = 2;
+  string type = 3;
+}
+
+message GroupNameRequest {
+  string name = 1;
+}
+
+message ReadablePermissionResponse {
+  repeated ReadablePermission permissions = 1;
+}
+
+message ReadableGroupResponse {
+  repeated ReadableGroup groups = 1;
+}
+
+message EmptyRequest {
+}
+
+
+

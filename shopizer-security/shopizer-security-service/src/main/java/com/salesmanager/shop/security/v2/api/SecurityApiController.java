@@ -38,9 +38,9 @@ import java.util.Set;
 @Api(tags = { "Groups and permissions Api" })
 @SwaggerDefinition(tags = {
 		@Tag(name = "List of supported groups and permissions", description = "List groups and attached permissions for reference") })
-public class SecurityApi {
+public class SecurityApiController implements SecurityApi {
 
-	private static final Logger LOGGER = LoggerFactory.getLogger(SecurityApi.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(SecurityApiController.class);
 
 	@Inject
 	private PermissionService permissionService;
@@ -48,6 +48,7 @@ public class SecurityApi {
 	@Inject
 	private GroupService groupService;
 
+	@Override
 	@ResponseStatus(HttpStatus.OK)
 	@GetMapping({ "/private/{group}/permissions" })
 	@ApiOperation(httpMethod = "GET", value = "Get permissions by group", notes = "", produces = MediaType.APPLICATION_JSON_VALUE, response = List.class)
@@ -81,6 +82,7 @@ public class SecurityApi {
 	 * 
 	 * @return
 	 */
+	@Override
 	@GetMapping("/private/permissions")
 	public List<ReadablePermission> permissions() {
 		List<Permission> permissions = permissionService.list();
@@ -99,6 +101,7 @@ public class SecurityApi {
 	 * 
 	 * @return
 	 */
+	@Override
 	@GetMapping("/private/groups")
 	public List<ReadableGroup> groups() {
 		List<Group> groups = groupService.list();

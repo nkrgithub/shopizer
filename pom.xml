@@ -93,6 +93,8 @@
         <coverage.lines>.30</coverage.lines>
         <coverage.branches>.37</coverage.branches>
 
+        <protobuf-java.version>3.22.4</protobuf-java.version>
+
     </properties>
 
     <!--BOM -->
@@ -117,6 +119,13 @@
                 <groupId>com.shopizer</groupId>
                 <artifactId>sm-shop-model</artifactId>
                 <version>3.2.5</version>
+            </dependency>
+
+            <!-- Protobuf Java -->
+            <dependency>
+                <groupId>com.google.protobuf</groupId>
+                <artifactId>protobuf-java</artifactId>
+                <version>${protobuf-java.version}</version>
             </dependency>
 
             <!-- https://mvnrepository.com/artifact/javax.inject/javax.inject -->
