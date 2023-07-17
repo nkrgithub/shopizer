@@ -93,8 +93,12 @@
         <coverage.lines>.30</coverage.lines>
         <coverage.branches>.37</coverage.branches>
 
+        <!-- gRPC -->
         <protobuf-java.version>3.22.4</protobuf-java.version>
+        <grpc.version>1.56.1</grpc.version>
 
+        <!-- Apache Dubbo -->
+        <dubbo.version>3.1.7</dubbo.version>
     </properties>
 
     <!--BOM -->
@@ -121,11 +125,31 @@
                 <version>3.2.5</version>
             </dependency>
 
+            <!-- Apache Dubbo -->
+            <dependency>
+                <groupId>org.apache.dubbo</groupId>
+                <artifactId>dubbo</artifactId>
+                <version>${dubbo.version}</version>
+                <optional>true</optional>
+            </dependency>
+
             <!-- Protobuf Java -->
             <dependency>
                 <groupId>com.google.protobuf</groupId>
                 <artifactId>protobuf-java</artifactId>
                 <version>${protobuf-java.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>io.grpc</groupId>
+                <artifactId>grpc-protobuf</artifactId>
+                <version>${grpc.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>io.grpc</groupId>
+                <artifactId>grpc-stub</artifactId>
+                <version>${grpc.version}</version>
             </dependency>
 
             <!-- https://mvnrepository.com/artifact/javax.inject/javax.inject -->

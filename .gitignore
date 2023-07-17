@@ -95,3 +95,4 @@ compiler/.gradle/*
 
 # others
 build.txt
+sm-core/files/store/StoreRepository.dat
