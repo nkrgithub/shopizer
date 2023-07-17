@@ -17,12 +17,17 @@
 package com.salesmanager.shop.security.service;
 
 
-import com.salesmanager.shop.security.v2.api.proto.EmptyRequest;
-import com.salesmanager.shop.security.v2.api.proto.GroupNameRequest;
-import com.salesmanager.shop.security.v2.api.proto.ReadablePermissionResponse;
-import com.salesmanager.shop.security.v2.api.proto.SecurityApi;
+import com.salesmanager.shop.security.v2.api.grpc.EmptyRequest;
+import com.salesmanager.shop.security.v2.api.grpc.GroupNameRequest;
+import com.salesmanager.shop.security.v2.api.grpc.ReadableGroup;
+import com.salesmanager.shop.security.v2.api.grpc.ReadableGroupResponse;
+import com.salesmanager.shop.security.v2.api.grpc.ReadablePermission;
+import com.salesmanager.shop.security.v2.api.grpc.ReadablePermissionResponse;
+import com.salesmanager.shop.security.v2.api.grpc.SecurityApi;
 import org.apache.dubbo.config.annotation.DubboService;
 import org.springframework.beans.factory.annotation.Autowired;
+
+import java.util.List;
 
 /**
  * {@link SecurityApi} Service
@@ -38,16 +43,43 @@ public class SecurityApiService implements SecurityApi {
 
     @Override
     public ReadablePermissionResponse listPermissions(GroupNameRequest request) {
-        return null;
+        String group = request.getName();
+        List<com.salesmanager.shop.security.model.ReadablePermission> permissions = securityApi.listPermissions(group);
+        return responsePermissions(permissions);
+    }
+
+    private ReadablePermission buildReadablePermission(com.salesmanager.shop.security.model.ReadablePermission permission) {
+        return ReadablePermission.newBuilder()
+                .setId(String.valueOf(permission.getId()))
+                .setName(permission.getName())
+                .build();
     }
 
     @Override
     public ReadablePermissionResponse permissions(EmptyRequest request) {
-        return null;
+        List<com.salesmanager.shop.security.model.ReadablePermission> permissions = securityApi.permissions();
+        return responsePermissions(permissions);
+    }
+
+    private ReadablePermissionResponse responsePermissions(List<com.salesmanager.shop.security.model.ReadablePermission> permissions) {
+        ReadablePermissionResponse.Builder builder = ReadablePermissionResponse.newBuilder();
+        permissions.stream().map(this::buildReadablePermission).forEach(builder::addPermissions);
+        return builder.build();
     }
 
     @Override
-    public ReadablePermissionResponse groups(EmptyRequest request) {
-        return null;
+    public ReadableGroupResponse groups(EmptyRequest request) {
+        List<com.salesmanager.shop.security.model.ReadableGroup> readableGroups = securityApi.groups();
+        ReadableGroupResponse.Builder builder = ReadableGroupResponse.newBuilder();
+        readableGroups.stream().map(this::buildReadableGroup).forEach(builder::addGroups);
+        return builder.build();
+    }
+
+    private ReadableGroup buildReadableGroup(com.salesmanager.shop.security.model.ReadableGroup group) {
+        return ReadableGroup.newBuilder()
+                .setId(String.valueOf(group.getId()))
+                .setName(group.getName())
+                .setType(group.getType())
+                .build();
     }
 }

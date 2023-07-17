@@ -15,11 +15,10 @@
 * limitations under the License.
 */
 
-    package com.salesmanager.shop.security.v2.api.proto;
+    package com.salesmanager.shop.security.v2.api.grpc;
 
-import com.google.protobuf.Message;
-import org.apache.dubbo.common.URL;
 import org.apache.dubbo.common.stream.StreamObserver;
+import org.apache.dubbo.common.URL;
 import org.apache.dubbo.rpc.Invoker;
 import org.apache.dubbo.rpc.PathResolver;
 import org.apache.dubbo.rpc.RpcException;
@@ -29,16 +28,20 @@ import org.apache.dubbo.rpc.model.MethodDescriptor;
 import org.apache.dubbo.rpc.model.ServiceDescriptor;
 import org.apache.dubbo.rpc.model.StubMethodDescriptor;
 import org.apache.dubbo.rpc.model.StubServiceDescriptor;
+import org.apache.dubbo.rpc.stub.BiStreamMethodHandler;
+import org.apache.dubbo.rpc.stub.ServerStreamMethodHandler;
 import org.apache.dubbo.rpc.stub.StubInvocationUtil;
 import org.apache.dubbo.rpc.stub.StubInvoker;
 import org.apache.dubbo.rpc.stub.StubMethodHandler;
 import org.apache.dubbo.rpc.stub.StubSuppliers;
 import org.apache.dubbo.rpc.stub.UnaryStubMethodHandler;
 
+import com.google.protobuf.Message;
+
 import java.util.HashMap;
 import java.util.Map;
-import java.util.concurrent.CompletableFuture;
 import java.util.function.BiConsumer;
+import java.util.concurrent.CompletableFuture;
 
 public final class DubboSecurityApiTriple {
 
@@ -90,19 +93,19 @@ public final class DubboSecurityApiTriple {
     ReadablePermissionResponse::parseFrom);
 
     private static final StubMethodDescriptor groupsMethod = new StubMethodDescriptor("groups",
-    EmptyRequest.class, ReadablePermissionResponse.class, serviceDescriptor, MethodDescriptor.RpcType.UNARY,
+    EmptyRequest.class, ReadableGroupResponse.class, serviceDescriptor, MethodDescriptor.RpcType.UNARY,
     obj -> ((Message) obj).toByteArray(), obj -> ((Message) obj).toByteArray(), EmptyRequest::parseFrom,
-    ReadablePermissionResponse::parseFrom);
+    ReadableGroupResponse::parseFrom);
 
     private static final StubMethodDescriptor groupsAsyncMethod = new StubMethodDescriptor("groups",
     EmptyRequest.class, CompletableFuture.class, serviceDescriptor, MethodDescriptor.RpcType.UNARY,
     obj -> ((Message) obj).toByteArray(), obj -> ((Message) obj).toByteArray(), EmptyRequest::parseFrom,
-    ReadablePermissionResponse::parseFrom);
+    ReadableGroupResponse::parseFrom);
 
     private static final StubMethodDescriptor groupsProxyAsyncMethod = new StubMethodDescriptor("groupsAsync",
-    EmptyRequest.class, ReadablePermissionResponse.class, serviceDescriptor, MethodDescriptor.RpcType.UNARY,
+    EmptyRequest.class, ReadableGroupResponse.class, serviceDescriptor, MethodDescriptor.RpcType.UNARY,
     obj -> ((Message) obj).toByteArray(), obj -> ((Message) obj).toByteArray(), EmptyRequest::parseFrom,
-    ReadablePermissionResponse::parseFrom);
+    ReadableGroupResponse::parseFrom);
 
 
 
@@ -142,16 +145,16 @@ public final class DubboSecurityApiTriple {
             StubInvocationUtil.unaryCall(invoker, permissionsMethod , request, responseObserver);
         }
         @Override
-        public ReadablePermissionResponse groups(EmptyRequest request){
+        public ReadableGroupResponse groups(EmptyRequest request){
             return StubInvocationUtil.unaryCall(invoker, groupsMethod, request);
         }
 
-        public CompletableFuture<ReadablePermissionResponse> groupsAsync(EmptyRequest request){
+        public CompletableFuture<ReadableGroupResponse> groupsAsync(EmptyRequest request){
             return StubInvocationUtil.unaryCall(invoker, groupsAsyncMethod, request);
         }
 
         @Override
-        public void groups(EmptyRequest request, StreamObserver<ReadablePermissionResponse> responseObserver){
+        public void groups(EmptyRequest request, StreamObserver<ReadableGroupResponse> responseObserver){
             StubInvocationUtil.unaryCall(invoker, groupsMethod , request, responseObserver);
         }
 
@@ -198,9 +201,9 @@ public final class DubboSecurityApiTriple {
             handlers.put(permissionsMethod.getMethodName(), new UnaryStubMethodHandler<>(permissionsFunc));
             BiConsumer<EmptyRequest, StreamObserver<ReadablePermissionResponse>> permissionsAsyncFunc = syncToAsync(this::permissions);
             handlers.put(permissionsProxyAsyncMethod.getMethodName(), new UnaryStubMethodHandler<>(permissionsAsyncFunc));
-            BiConsumer<EmptyRequest, StreamObserver<ReadablePermissionResponse>> groupsFunc = this::groups;
+            BiConsumer<EmptyRequest, StreamObserver<ReadableGroupResponse>> groupsFunc = this::groups;
             handlers.put(groupsMethod.getMethodName(), new UnaryStubMethodHandler<>(groupsFunc));
-            BiConsumer<EmptyRequest, StreamObserver<ReadablePermissionResponse>> groupsAsyncFunc = syncToAsync(this::groups);
+            BiConsumer<EmptyRequest, StreamObserver<ReadableGroupResponse>> groupsAsyncFunc = syncToAsync(this::groups);
             handlers.put(groupsProxyAsyncMethod.getMethodName(), new UnaryStubMethodHandler<>(groupsAsyncFunc));
 
 
@@ -221,7 +224,7 @@ public final class DubboSecurityApiTriple {
         }
 
         @Override
-        public ReadablePermissionResponse groups(EmptyRequest request){
+        public ReadableGroupResponse groups(EmptyRequest request){
             throw unimplementedMethodException(groupsMethod);
         }
 

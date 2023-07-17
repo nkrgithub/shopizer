@@ -3,7 +3,7 @@ syntax = "proto3";
 package shopizer.security;
 
 option java_multiple_files = true;
-option java_package = "com.salesmanager.shop.security.v2.api.proto";
+option java_package = "com.salesmanager.shop.security.v2.api.grpc";
 option java_outer_classname = "ServiceDiscoveryOuter";
 
 service SecurityApi {
@@ -12,7 +12,7 @@ service SecurityApi {
 
   rpc permissions(EmptyRequest) returns (ReadablePermissionResponse) {}
 
-  rpc groups(EmptyRequest) returns (ReadablePermissionResponse) {}
+  rpc groups(EmptyRequest) returns (ReadableGroupResponse) {}
 }
 
 message ReadablePermission {
