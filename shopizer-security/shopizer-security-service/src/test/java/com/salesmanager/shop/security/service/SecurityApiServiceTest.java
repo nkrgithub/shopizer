@@ -37,7 +37,9 @@ import org.springframework.test.context.junit4.SpringRunner;
         properties = {
                 "dubbo.application.name=test",
                 "dubbo.application.parameters.unicast=false",
-                "dubbo.registry.address=multicast://228.0.0.4:1234"
+                "dubbo.registry.address=multicast://228.0.0.4:1234",
+                "dubbo.protocol.name=tri",
+                "dubbo.protocol.proxy=nativestub"
         }
 )
 @EnableDubbo(scanBasePackages = "no.scan")

@@ -54,6 +54,9 @@ dubbo:
     base-packages: com.salesmanager.shop.security.service
   registry:
     address: multicast://228.0.0.4:1234
+  protocol:
+    name: tri
+    port: 50051
 
 server:
   error:
