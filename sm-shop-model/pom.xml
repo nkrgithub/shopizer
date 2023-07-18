@@ -6,6 +6,7 @@
     <groupId>com.shopizer</groupId>
     <artifactId>shopizer</artifactId>
     <version>3.2.5</version>
+    <relativePath>../pom.xml</relativePath>
   </parent>
 
   <artifactId>sm-shop-model</artifactId>

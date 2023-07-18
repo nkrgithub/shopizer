@@ -17,7 +17,6 @@
     <name>shopizer</name>
     <url>http://www.shopizer.com</url>
 
-
     <licenses>
         <license>
             <name>Apache License, Version 2.0</name>
@@ -36,6 +35,7 @@
         <module>shopizer-commons</module>
         <module>shopizer-security</module>
         <module>eureka-server</module>
+        <module>api-gateway</module>
     </modules>
 
     <properties>
@@ -99,6 +99,9 @@
 
         <!-- Apache Dubbo -->
         <dubbo.version>3.1.7</dubbo.version>
+
+        <!-- Eureka -->
+        <eureka.version>1.10.17</eureka.version>
     </properties>
 
     <!--BOM -->
@@ -221,15 +224,6 @@
                 <artifactId>mysql-connector-java</artifactId>
                 <version>${mysql-jdbc-version}</version>
             </dependency>
-
-            <!-- For connecting to oracle -->
-            <!-- <dependency> <groupId>com.oracle.database.jdbc</groupId> <artifactId>ojdbc8</artifactId>
-                <version>${oracle.version}</version> </dependency> -->
-
-
-            <!-- For connecting to postgresql -->
-            <!-- <dependency> <groupId>org.postgresql</groupId> <artifactId>postgresql</artifactId>
-                <version>${postgresql.version}</version> <scope>runtime</scope> </dependency> -->
 
             <!-- Google Map API -->
             <dependency>
@@ -410,6 +404,39 @@
                 <version>${javax.annotation}</version>
             </dependency>
 
+            <!-- Eureka Client -->
+            <dependency>
+                <groupId>com.netflix.eureka</groupId>
+                <artifactId>eureka-client</artifactId>
+                <version>${eureka.version}</version>
+                <exclusions>
+                    <exclusion>
+                        <artifactId>archaius-core</artifactId>
+                        <groupId>com.netflix.archaius</groupId>
+                    </exclusion>
+                    <exclusion>
+                        <artifactId>compactmap</artifactId>
+                        <groupId>com.github.vlsi.compactmap</groupId>
+                    </exclusion>
+                    <exclusion>
+                        <artifactId>servlet-api</artifactId>
+                        <groupId>javax.servlet</groupId>
+                    </exclusion>
+                    <exclusion>
+                        <artifactId>commons-logging</artifactId>
+                        <groupId>commons-logging</groupId>
+                    </exclusion>
+                    <exclusion>
+                        <artifactId>jsr305</artifactId>
+                        <groupId>com.google.code.findbugs</groupId>
+                    </exclusion>
+                    <exclusion>
+                        <artifactId>annotations</artifactId>
+                        <groupId>com.google.code.findbugs</groupId>
+                    </exclusion>
+                </exclusions>
+            </dependency>
+
             <!-- Spring Cloud Dependencies -->
             <dependency>
                 <groupId>org.springframework.cloud</groupId>
@@ -430,6 +457,13 @@
                 <version>${spring-cloud.version}</version>
                 <type>pom</type>
                 <scope>import</scope>
+            </dependency>
+
+            <!-- Spring Cloud Gateway -->
+            <dependency>
+                <groupId>org.springframework.cloud</groupId>
+                <artifactId>spring-cloud-starter-gateway</artifactId>
+                <version>${spring-cloud.version}</version>
             </dependency>
 
             <!-- Spring Cloud Alibaba Dependencies -->

@@ -537,7 +537,7 @@ public class USPSShippingQuote implements ShippingQuoteModule {
 			// valid</ErrorDescription><ErrorLocation><ErrorLocationElementName>AddressValidationRequest</ErrorLocationElementName></ErrorLocation></Error></Response></AddressValidationResponse>
 
 
-			//<?xml version="1.0"?>
+			//<?xml version="1.0" encoding="UTF-8"?>
 			//<IntlRateResponse><Package ID="1"><Error><Number>-2147218046</Number>
 			//<Source>IntlPostage;clsIntlPostage.GetCountryAndRestirctedServiceId;clsIntlPostage.CalcAllPostageDimensionsXML;IntlRate.ProcessRequest</Source>
 			//<Description>Invalid Country Name</Description><HelpFile></HelpFile><HelpContext>1000440</HelpContext></Error></Package></IntlRateResponse>
