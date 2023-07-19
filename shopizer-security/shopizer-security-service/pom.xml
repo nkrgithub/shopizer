@@ -95,20 +95,19 @@
             <artifactId>springfox-swagger-ui</artifactId>
         </dependency>
 
-        <!-- Have to install in the local Maven repository
-        https://github.com/microsphere-projects/microsphere-java
-        https://github.com/microsphere-projects/microsphere-spring
-        -->
         <dependency>
             <groupId>io.github.microsphere-projects</groupId>
             <artifactId>microsphere-spring-context</artifactId>
-            <version>0.0.1-SNAPSHOT</version>
+        </dependency>
+
+        <dependency>
+            <groupId>io.github.microsphere-projects</groupId>
+            <artifactId>microsphere-spring-webmvc</artifactId>
         </dependency>
 
         <dependency>
             <groupId>io.github.microsphere-projects</groupId>
             <artifactId>microsphere-micrometer</artifactId>
-            <version>0.0.1-SNAPSHOT</version>
         </dependency>
 
         <!-- Micrometer - Prometheus -->
