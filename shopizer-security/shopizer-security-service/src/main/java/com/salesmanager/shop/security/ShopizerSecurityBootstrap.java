@@ -16,9 +16,6 @@
  */
 package com.salesmanager.shop.security;
 
-import io.micrometer.core.instrument.MeterRegistry;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.actuate.autoconfigure.security.servlet.ManagementWebSecurityAutoConfiguration;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -27,8 +24,6 @@ import org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfi
 import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
-
-import javax.annotation.PostConstruct;
 
 /**
  * Shopizer Security Spring Boot Bootstrap
@@ -50,14 +45,14 @@ public class ShopizerSecurityBootstrap {
         SpringApplication.run(ShopizerSecurityBootstrap.class, args);
     }
 
-    @Value("${spring.application.name}")
-    private String applicationName;
-
-    @Autowired
-    private MeterRegistry meterRegistry;
-
-    @PostConstruct
-    public void init() {
-        meterRegistry.config().commonTags("application", applicationName);
-    }
+//    @Value("${spring.application.name}")
+//    private String applicationName;
+//
+//    @Autowired
+//    private MeterRegistry meterRegistry;
+//
+//    @PostConstruct
+//    public void init() {
+//        meterRegistry.config().commonTags("application", applicationName);
+//    }
 }
