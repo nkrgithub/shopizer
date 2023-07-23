@@ -43,11 +43,12 @@ eureka:
     serviceUrl:
       defaultZone: http://127.0.0.1:12345/eureka
   instance:
+    instanceId: ${spring.cloud.client.ip-address}:${server.port}
     metadataMap:
       prometheus:
+        scrape: true
         path: ${management.endpoints.web.basePath:/actuator}/prometheus
         port: ${management.server.port:${server.port}}
-        scrape: true
 
 dubbo:
   scan:
