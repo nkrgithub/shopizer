@@ -155,10 +155,6 @@
             <version>1.6.0</version>
         </dependency>
 
-        <!-- Have to install in the local Maven repository
-        https://github.com/microsphere-projects/microsphere-java
-        https://github.com/microsphere-projects/microsphere-spring
-        -->
         <dependency>
             <groupId>io.github.microsphere-projects</groupId>
             <artifactId>microsphere-spring-context</artifactId>
