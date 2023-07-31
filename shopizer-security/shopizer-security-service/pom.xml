@@ -100,9 +100,10 @@
             <artifactId>springfox-swagger-ui</artifactId>
         </dependency>
 
+        <!-- Microsphere -->
         <dependency>
             <groupId>io.github.microsphere-projects</groupId>
-            <artifactId>microsphere-spring-context</artifactId>
+            <artifactId>microsphere-spring-cloud-netflix-eureka-client</artifactId>
         </dependency>
 
         <dependency>

@@ -16,6 +16,7 @@
  */
 package com.salesmanager.shop.security;
 
+import io.microsphere.spring.webmvc.annotation.EnableCommonWebMvc;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.actuate.autoconfigure.security.servlet.ManagementWebSecurityAutoConfiguration;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -31,6 +32,7 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
  * @author <a href="mailto:mercyblitz@gmail.com">Mercy</a>
  * @since 1.0.0
  */
+@EnableCommonWebMvc
 @EnableDiscoveryClient
 @EnableJpaRepositories(basePackages = "com.salesmanager.shop")
 @EntityScan(basePackages = "com.salesmanager.shop")

@@ -20,9 +20,15 @@
 
     <dependencies>
 
+        <!-- Microsphere -->
         <dependency>
             <groupId>io.github.microsphere-projects</groupId>
-            <artifactId>microsphere-spring-cloud-commons</artifactId>
+            <artifactId>microsphere-spring-cloud-netflix-eureka-client</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>io.github.microsphere-projects</groupId>
+            <artifactId>microsphere-spring-webmvc</artifactId>
         </dependency>
 
         <!-- Servlet API -->
