@@ -12,6 +12,15 @@ spring:
           uri: lb://shopizer-security-service
           predicates:
             - Path=/api/v1/sec/**
+#        - id: eureka-server
+#          uri: lb://eureka-server
+#          predicates:
+#            - Path=/eureka/**
+        - id: web-endpoints
+          uri: we://all
+          predicates:
+            - Path=/eureka/**
+
       loadbalancer:
         use404: false
 
