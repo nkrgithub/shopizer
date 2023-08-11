@@ -8,18 +8,25 @@ spring:
         ssl:
           useInsecureTrustManager: false
       routes:
-        - id: shopizer-security-service
-          uri: lb://shopizer-security-service
-          predicates:
-            - Path=/api/v1/sec/**
-#        - id: eureka-server
-#          uri: lb://eureka-server
-#          predicates:
-#            - Path=/eureka/**
+        #        - id: shopizer-security-service
+        #          uri: lb://shopizer-security-service
+        #          predicates:
+        #            - Path=/api/v1/sec/**
+        #        - id: eureka-server
+        #          uri: lb://eureka-server
+        #          predicates:
+        #            - Path=/eureka/**
         - id: web-endpoints
           uri: we://all
           predicates:
-            - Path=/eureka/**
+            - Path=/**
+          metadata:
+            web-endpoint:
+              exclude:
+                services: api-gateway
+                patterns: /eureka/**
+                methods: GET
+              load-balancer: round-robin
 
       loadbalancer:
         use404: false

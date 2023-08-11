@@ -16,11 +16,9 @@
  */
 package org.microsphere.spring.cloud.gateway;
 
-import org.microsphere.spring.cloud.gateway.filter.WebEndpointMappingGlobalFilter;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
-import org.springframework.context.annotation.Import;
 
 /**
  * Spring Cloud Gateway Bootstrap
@@ -30,7 +28,6 @@ import org.springframework.context.annotation.Import;
  */
 @EnableDiscoveryClient
 @EnableAutoConfiguration
-@Import(WebEndpointMappingGlobalFilter.class)
 public class GatewayBootstrap {
 
     public static void main(String[] args) {
