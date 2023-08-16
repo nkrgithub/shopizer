@@ -21,7 +21,9 @@ public interface UserRepository extends JpaRepository<User, Long>, UserRepositor
 	@Query("select distinct u from User as u left join fetch u.groups ug join fetch u.merchantStore um left join fetch u.defaultLanguage ul where u.id = ?1")
 	User findOne(Long id);
 	
-	@Query("select distinct u from User as u left join fetch u.groups ug join fetch u.merchantStore um left join fetch u.defaultLanguage ul order by u.id")
+	@Query("select distinct u from User as u " +
+			"left join fetch u.groups ug " +
+			"join fetch u.merchantStore um left join fetch u.defaultLanguage ul order by u.id")
 	List<User> findAll();
 	
 	@Query("select distinct u from User as u left join fetch u.groups ug join fetch u.merchantStore um left join fetch u.defaultLanguage ul where um.id = ?1 order by u.id")

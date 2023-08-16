@@ -19,7 +19,7 @@ public interface ManufacturerRepository extends JpaRepository<Manufacturer, Long
 	@Query("select m from Manufacturer m left join fetch m.descriptions md join fetch m.merchantStore ms where ms.id=?1")
 	List<Manufacturer> findByStore(Integer storeId);
 	
-    @Query("select m from Manufacturer m join fetch m.descriptions md join fetch m.merchantStore ms join fetch md.language mdl where ms.id=?1 and mdl.id=?2 and (?3 is null or md.name like %?3%)")
+    @Query("select m from Manufacturer m join fetch m.descriptions md join fetch m.merchantStore ms join fetch md.language mdl where ms.id=?1 and mdl.id=?2 and (md.name like %?3% or ?3 is null)")
 	//@Query("select m from Manufacturer m join fetch m.descriptions md join fetch m.merchantStore ms join fetch md.language mdl where ms.id=?1 and mdl.id=?2")
 	//@Query("select m from Manufacturer m left join m.descriptions md join fetch m.merchantStore ms where ms.id=?1")
 	List<Manufacturer> findByStore(Integer storeId, Integer languageId, String name);
