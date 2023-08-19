@@ -52,6 +52,22 @@
             <artifactId>eureka-client</artifactId>
         </dependency>
 
+        <!-- Microsphere -->
+        <dependency>
+            <groupId>io.github.microsphere-projects</groupId>
+            <artifactId>microsphere-spring-cloud-netflix-eureka-client</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>io.github.microsphere-projects</groupId>
+            <artifactId>microsphere-spring-webmvc</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>io.github.microsphere-projects</groupId>
+            <artifactId>microsphere-micrometer</artifactId>
+        </dependency>
+
         <!-- Spring boot starters -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
