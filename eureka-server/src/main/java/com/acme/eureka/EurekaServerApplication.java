@@ -17,7 +17,7 @@
 package com.acme.eureka;
 
 import com.acme.eureka.listener.EurekaServerListener;
-import io.microsphere.spring.webmvc.annotation.EnableCommonWebMvc;
+import io.microsphere.spring.webmvc.annotation.EnableWebMvcExtension;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.SpringApplication;
@@ -40,7 +40,7 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 @EnableAutoConfiguration
 @Import(EurekaServerListener.class)
 @ServletComponentScan
-@EnableCommonWebMvc
+@EnableWebMvcExtension
 public class EurekaServerApplication extends SpringBootServletInitializer {
 
     private static final Logger logger = LoggerFactory.getLogger(EurekaServerApplication.class);
