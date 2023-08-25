@@ -33,3 +33,6 @@ sm-shop/src/main/resources/database.properties
 **/files/**
 *.dat
 .mvnw/*.jar
+
+files/**
+*.dat
