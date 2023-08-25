@@ -30,5 +30,5 @@ sm-shop/.project
 sm-shop/src/main/resources/database.properties
 .DS_Store
 
-files/**
+**/files/**
 .mvnw/*.jar
