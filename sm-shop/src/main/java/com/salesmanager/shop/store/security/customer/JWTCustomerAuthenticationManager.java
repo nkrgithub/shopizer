@@ -4,8 +4,10 @@ import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.salesmanager.shop.store.security.KeyCloakTokenService;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
@@ -28,6 +30,9 @@ public class JWTCustomerAuthenticationManager extends CustomAuthenticationManage
 	
     @Inject
     private JWTTokenUtil jwtTokenUtil;
+
+//    @Autowired
+//    private KeyCloakTokenService customerKeyCloakTokenService;
     
     @Inject
     private UserDetailsService jwtCustomerDetailsService;
@@ -43,6 +48,7 @@ public class JWTCustomerAuthenticationManager extends CustomAuthenticationManage
             authToken = requestHeader.substring(7);
             try {
                 username = jwtTokenUtil.getUsernameFromToken(authToken);
+                //username = customerKeyCloakTokenService.getUsernameFromToken(authToken);
             } catch (IllegalArgumentException e) {
             	logger.error("an error occured during getting username from token", e);
             } catch (ExpiredJwtException e) {
@@ -64,6 +70,7 @@ public class JWTCustomerAuthenticationManager extends CustomAuthenticationManage
 
             // For simple validation it is completely sufficient to just check the token integrity. You don't have to call
             // the database compellingly. Again it's up to you ;)
+            //if (userDetails != null && customerKeyCloakTokenService.validateToken(authToken)) {
             if (userDetails != null && jwtTokenUtil.validateToken(authToken, userDetails)) {
                 authentication = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
                 authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));

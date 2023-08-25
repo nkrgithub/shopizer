@@ -45,6 +45,7 @@ public class JWTAdminAuthenticationManager extends CustomAuthenticationManager {
 
     try {
       username = jwtTokenUtil.getUsernameFromToken(authToken);
+      //username = backofficeKeyCloakTokenService.getUsernameFromToken(authToken);
     } catch (IllegalArgumentException e) {
       logger.error("an error occured during getting username from token", e);
     } catch (ExpiredJwtException e) {
@@ -65,6 +66,7 @@ public class JWTAdminAuthenticationManager extends CustomAuthenticationManager {
       // For simple validation it is completely sufficient to just check the token integrity. You
       // don't have to call
       // the database compellingly. Again it's up to you ;)
+      //if (userDetails != null && backofficeKeyCloakTokenService.validateToken(authToken)) {
       if (userDetails != null && jwtTokenUtil.validateToken(authToken, userDetails)) {
         authentication = new UsernamePasswordAuthenticationToken(userDetails, null,
             userDetails.getAuthorities());
