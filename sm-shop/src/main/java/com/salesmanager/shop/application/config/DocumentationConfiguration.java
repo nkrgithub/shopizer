@@ -4,6 +4,8 @@ import static io.swagger.models.auth.In.HEADER;
 import static java.util.Collections.singletonList;
 import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 
+import com.google.common.base.Predicate;
+import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
@@ -12,13 +14,16 @@ import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import org.springframework.beans.BeansException;
+import org.springframework.beans.factory.config.BeanPostProcessor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.util.ReflectionUtils;
 import org.springframework.web.bind.annotation.RequestMethod;
 
-import com.google.common.base.Predicate;
 import com.google.common.base.Predicates;
 
+import org.springframework.web.servlet.mvc.method.RequestMappingInfoHandlerMapping;
 import springfox.documentation.RequestHandler;
 import springfox.documentation.builders.RequestHandlerSelectors;
 import springfox.documentation.builders.ResponseMessageBuilder;
@@ -34,15 +39,16 @@ import springfox.documentation.service.VendorExtension;
 import springfox.documentation.spi.DocumentationType;
 import springfox.documentation.spi.service.contexts.SecurityContext;
 import springfox.documentation.spring.web.plugins.Docket;
+import springfox.documentation.spring.web.plugins.WebMvcRequestHandlerProvider;
 import springfox.documentation.swagger2.annotations.EnableSwagger2;
 
 @Configuration
 @EnableSwagger2
 public class DocumentationConfiguration {
 
-	public static final Contact DEFAULT_CONTACT = new Contact("Shopizer", "https://www.shopizer.com", "");
+	public static final Contact DEFAULT_CONTACT = new Contact("Shopizer", "https://shopizer.net", "");
 	
-	private static final String HOST = "localhost:8080";
+	private static final String HOST = "shopizer.net";
 
 	/**
 	 * http://localhost:8080/swagger-ui.html#/ http://localhost:8080/v2/api-docs
@@ -67,6 +73,7 @@ public class DocumentationConfiguration {
 				.host(HOST)
 				.select()
 				.apis(requestHandlers()).build()
+				.apiInfo(apiInfo())
 				.securitySchemes(Collections.singletonList(new ApiKey("JWT", AUTHORIZATION, HEADER.name())))
 		        .securityContexts(singletonList(
 		            SecurityContext.builder()
@@ -83,14 +90,14 @@ public class DocumentationConfiguration {
 	            .globalResponseMessage(RequestMethod.GET, getMessages);
 
 	}
-	
-	final Predicate<RequestHandler> requestHandlers() {
-		
-		   Set<Predicate<RequestHandler>> matchers = new HashSet<Predicate<RequestHandler>>();
-		   matchers.add(RequestHandlerSelectors.basePackage("com.salesmanager.shop.store.api.v1"));
-		   matchers.add(RequestHandlerSelectors.basePackage("com.salesmanager.shop.store.api.v2"));
-		   
-		   return Predicates.or(matchers);
+
+	final com.google.common.base.Predicate<RequestHandler> requestHandlers() {
+
+		Set<com.google.common.base.Predicate<RequestHandler>> matchers = new HashSet<Predicate<RequestHandler>>();
+		matchers.add(RequestHandlerSelectors.basePackage("com.salesmanager.shop.store.api.v1"));
+		matchers.add(RequestHandlerSelectors.basePackage("com.salesmanager.shop.store.api.v2"));
+
+		return Predicates.or(matchers);
 
 	}
 
@@ -106,6 +113,39 @@ public class DocumentationConfiguration {
 	private static ArrayList<? extends SecurityScheme> securitySchemes() {
 		return (ArrayList<? extends SecurityScheme>) Stream.of(new ApiKey("Bearer", "Authorization", "header"))
 				.collect(Collectors.toList());
+	}
+
+	@Bean
+	public static BeanPostProcessor springfoxHandlerProviderBeanPostProcessor() {
+		return new BeanPostProcessor() {
+
+			@Override
+			public Object postProcessAfterInitialization(Object bean, String beanName) throws BeansException {
+				if (bean instanceof WebMvcRequestHandlerProvider) {
+					customizeSpringfoxHandlerMappings(getHandlerMappings(bean));
+				}
+				return bean;
+			}
+
+			private <T extends RequestMappingInfoHandlerMapping> void customizeSpringfoxHandlerMappings(List<T> mappings) {
+				List<T> copy = mappings.stream()
+					.filter(mapping -> mapping.getPatternParser() == null)
+					.collect(Collectors.toList());
+				mappings.clear();
+				mappings.addAll(copy);
+			}
+
+			@SuppressWarnings("unchecked")
+			private List<RequestMappingInfoHandlerMapping> getHandlerMappings(Object bean) {
+				try {
+					Field field = ReflectionUtils.findField(bean.getClass(), "handlerMappings");
+					field.setAccessible(true);
+					return (List<RequestMappingInfoHandlerMapping>) field.get(bean);
+				} catch (IllegalArgumentException | IllegalAccessException e) {
+					throw new IllegalStateException(e);
+				}
+			}
+		};
 	}
 
 }

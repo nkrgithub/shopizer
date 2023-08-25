@@ -8,6 +8,7 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import javax.inject.Inject;
+import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 
 import org.springframework.http.HttpStatus;
@@ -21,7 +22,9 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -62,7 +65,7 @@ public class CategoryApi {
 	@Inject
 	private UserFacade userFacade;
 
-	@GetMapping(value = "/private/category/{id}", produces = { APPLICATION_JSON_VALUE })
+	@GetMapping(value = {"/private/category/{id}", "/category/{id}"}, produces = { APPLICATION_JSON_VALUE })
 	@ApiOperation(httpMethod = "GET", value = "Get category list for an given Category id", notes = "List current Category and child category")
 	@ApiResponses(value = {
 			@ApiResponse(code = 200, message = "List of category found", response = ReadableCategory.class) })
@@ -76,7 +79,7 @@ public class CategoryApi {
 		return category;
 	}
 
-	@GetMapping(value = "/category/{friendlyUrl}", produces = { APPLICATION_JSON_VALUE })
+	@GetMapping(value = "/private/category/{friendlyUrl}", produces = { APPLICATION_JSON_VALUE })
 	@ApiOperation(httpMethod = "GET", value = "Get category list for an given Category code", notes = "List current Category and child category")
 	@ApiResponses(value = {
 			@ApiResponse(code = 200, message = "List of category found", response = ReadableCategory.class) })
@@ -233,6 +236,30 @@ public class CategoryApi {
 
 
 		categoryFacade.deleteCategory(categoryId, merchantStore);
+	}
+
+	@RequestMapping(value = { "/category/{id}/variants"}, method = RequestMethod.GET)
+	@ResponseStatus(HttpStatus.OK)
+	@ApiOperation(
+		httpMethod = "GET",
+		value = "Get all variation for all items in a given category",
+		notes = "",
+		produces = "application/json",
+		response = List.class)
+	@ResponseBody
+	@ApiImplicitParams({
+		@ApiImplicitParam(name = "store", dataType = "String", defaultValue = "DEFAULT"),
+		@ApiImplicitParam(name = "lang", dataType = "String", defaultValue = "en")
+	})
+	public List<com.salesmanager.shop.model.catalog.product.attribute.ReadableProductVariant> categoryVariantList(
+		@PathVariable final Long id, //category id
+		@ApiIgnore MerchantStore merchantStore,
+		@ApiIgnore Language language,
+		HttpServletResponse response)
+		throws Exception {
+
+		return categoryFacade.categoryProductVariants(id, merchantStore, language);
+
 	}
 
 }
