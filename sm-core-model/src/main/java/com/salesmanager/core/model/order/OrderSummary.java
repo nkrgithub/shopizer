@@ -1,11 +1,11 @@
 package com.salesmanager.core.model.order;
 
+import com.salesmanager.core.model.shipping.ShippingSummary;
+import com.salesmanager.core.model.shoppingcart.ShoppingCartItem;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
-
-import com.salesmanager.core.model.shipping.ShippingSummary;
-import com.salesmanager.core.model.shoppingcart.ShoppingCartItem;
 
 
 /**

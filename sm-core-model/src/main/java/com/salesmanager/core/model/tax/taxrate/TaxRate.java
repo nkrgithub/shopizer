@@ -14,9 +14,14 @@
  */
 package com.salesmanager.core.model.tax.taxrate;
 
-import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.List;
+import com.salesmanager.core.model.common.audit.AuditListener;
+import com.salesmanager.core.model.common.audit.AuditSection;
+import com.salesmanager.core.model.common.audit.Auditable;
+import com.salesmanager.core.model.generic.SalesManagerEntity;
+import com.salesmanager.core.model.merchant.MerchantStore;
+import com.salesmanager.core.model.reference.country.Country;
+import com.salesmanager.core.model.reference.zone.Zone;
+import com.salesmanager.core.model.tax.taxclass.TaxClass;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -36,18 +41,10 @@ import javax.persistence.TableGenerator;
 import javax.persistence.Transient;
 import javax.persistence.UniqueConstraint;
 import javax.validation.Valid;
-
 import javax.validation.constraints.NotEmpty;
-
-import com.salesmanager.core.constants.SchemaConstant;
-import com.salesmanager.core.model.common.audit.AuditListener;
-import com.salesmanager.core.model.common.audit.AuditSection;
-import com.salesmanager.core.model.common.audit.Auditable;
-import com.salesmanager.core.model.generic.SalesManagerEntity;
-import com.salesmanager.core.model.merchant.MerchantStore;
-import com.salesmanager.core.model.reference.country.Country;
-import com.salesmanager.core.model.reference.zone.Zone;
-import com.salesmanager.core.model.tax.taxclass.TaxClass;
+import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @EntityListeners(value = AuditListener.class)

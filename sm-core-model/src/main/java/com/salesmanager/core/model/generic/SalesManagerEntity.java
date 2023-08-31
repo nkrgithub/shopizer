@@ -1,10 +1,10 @@
 package com.salesmanager.core.model.generic;
 
+import org.hibernate.Hibernate;
+
 import java.io.Serializable;
 import java.text.Collator;
 import java.util.Locale;
-
-import org.hibernate.Hibernate;
 
 
 /**

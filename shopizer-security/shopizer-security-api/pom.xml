@@ -17,7 +17,7 @@
 
     <dependencies>
 
-        <!-- Shopizer Commons API -->
+        <!-- Shopizer API -->
         <dependency>
             <groupId>com.shopizer</groupId>
             <artifactId>shopizer-commons-api</artifactId>

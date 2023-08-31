@@ -1,7 +1,11 @@
 package com.salesmanager.core.model.system;
 
-import java.io.Serializable;
-import java.util.Date;
+import com.salesmanager.core.model.common.audit.AuditListener;
+import com.salesmanager.core.model.common.audit.AuditSection;
+import com.salesmanager.core.model.common.audit.Auditable;
+import com.salesmanager.core.model.generic.SalesManagerEntity;
+import com.salesmanager.core.model.merchant.MerchantStore;
+import com.salesmanager.core.model.user.User;
 
 import javax.persistence.Column;
 import javax.persistence.Embedded;
@@ -18,14 +22,8 @@ import javax.persistence.TableGenerator;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.persistence.UniqueConstraint;
-
-import com.salesmanager.core.constants.SchemaConstant;
-import com.salesmanager.core.model.common.audit.AuditListener;
-import com.salesmanager.core.model.common.audit.AuditSection;
-import com.salesmanager.core.model.common.audit.Auditable;
-import com.salesmanager.core.model.generic.SalesManagerEntity;
-import com.salesmanager.core.model.merchant.MerchantStore;
-import com.salesmanager.core.model.user.User;
+import java.io.Serializable;
+import java.util.Date;
 
 @Entity
 @EntityListeners(value = AuditListener.class)

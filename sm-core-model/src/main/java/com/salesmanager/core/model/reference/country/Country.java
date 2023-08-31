@@ -1,7 +1,9 @@
 package com.salesmanager.core.model.reference.country;
 
-import java.util.HashSet;
-import java.util.Set;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.salesmanager.core.model.generic.SalesManagerEntity;
+import com.salesmanager.core.model.reference.geozone.GeoZone;
+import com.salesmanager.core.model.reference.zone.Zone;
 
 import javax.persistence.Cacheable;
 import javax.persistence.CascadeType;
@@ -17,12 +19,8 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.TableGenerator;
 import javax.persistence.Transient;
-
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.salesmanager.core.constants.SchemaConstant;
-import com.salesmanager.core.model.generic.SalesManagerEntity;
-import com.salesmanager.core.model.reference.geozone.GeoZone;
-import com.salesmanager.core.model.reference.zone.Zone;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 @Table(name = "COUNTRY")

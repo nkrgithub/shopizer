@@ -1,6 +1,9 @@
 package com.salesmanager.core.model.system;
 
-import java.io.Serializable;
+import com.salesmanager.core.model.common.audit.AuditListener;
+import com.salesmanager.core.model.common.audit.AuditSection;
+import com.salesmanager.core.model.common.audit.Auditable;
+import com.salesmanager.core.model.generic.SalesManagerEntity;
 
 import javax.persistence.Column;
 import javax.persistence.Embedded;
@@ -11,12 +14,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.persistence.TableGenerator;
-
-import com.salesmanager.core.constants.SchemaConstant;
-import com.salesmanager.core.model.common.audit.AuditListener;
-import com.salesmanager.core.model.common.audit.AuditSection;
-import com.salesmanager.core.model.common.audit.Auditable;
-import com.salesmanager.core.model.generic.SalesManagerEntity;
+import java.io.Serializable;
 
 /**
  * Global system configuration information

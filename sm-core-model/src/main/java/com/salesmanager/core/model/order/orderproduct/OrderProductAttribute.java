@@ -1,7 +1,6 @@
 package com.salesmanager.core.model.order.orderproduct;
 
-import java.io.Serializable;
-import java.math.BigDecimal;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -12,9 +11,8 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.TableGenerator;
-
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.salesmanager.core.constants.SchemaConstant;
+import java.io.Serializable;
+import java.math.BigDecimal;
 
 @Entity
 @Table (name="ORDER_PRODUCT_ATTRIBUTE" )

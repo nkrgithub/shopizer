@@ -1,9 +1,9 @@
 package com.salesmanager.core.model.customer;
 
+import com.salesmanager.core.model.common.EntityList;
+
 import java.util.ArrayList;
 import java.util.List;
-
-import com.salesmanager.core.model.common.EntityList;
 
 public class CustomerList extends EntityList {
 

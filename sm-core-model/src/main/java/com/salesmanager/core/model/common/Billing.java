@@ -1,15 +1,14 @@
 package com.salesmanager.core.model.common;
 
+import com.salesmanager.core.model.reference.country.Country;
+import com.salesmanager.core.model.reference.zone.Zone;
+
 import javax.persistence.Column;
 import javax.persistence.Embeddable;
 import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-
 import javax.validation.constraints.NotEmpty;
-
-import com.salesmanager.core.model.reference.country.Country;
-import com.salesmanager.core.model.reference.zone.Zone;
 
 @Embeddable
 public class Billing {

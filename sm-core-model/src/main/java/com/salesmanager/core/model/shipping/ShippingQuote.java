@@ -1,14 +1,14 @@
 package com.salesmanager.core.model.shipping;
 
+import com.salesmanager.core.model.common.Delivery;
+import com.salesmanager.core.model.system.IntegrationModule;
+
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import com.salesmanager.core.model.common.Delivery;
-import com.salesmanager.core.model.system.IntegrationModule;
 
 public class ShippingQuote implements Serializable {
 

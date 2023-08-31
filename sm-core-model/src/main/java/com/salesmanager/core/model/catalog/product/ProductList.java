@@ -1,9 +1,9 @@
 package com.salesmanager.core.model.catalog.product;
 
+import com.salesmanager.core.model.common.EntityList;
+
 import java.util.ArrayList;
 import java.util.List;
-
-import com.salesmanager.core.model.common.EntityList;
 
 public class ProductList extends EntityList {
 	

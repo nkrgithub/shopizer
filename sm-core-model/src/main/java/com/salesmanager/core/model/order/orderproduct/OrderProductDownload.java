@@ -1,6 +1,7 @@
 package com.salesmanager.core.model.order.orderproduct;
 
-import java.io.Serializable;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.salesmanager.core.model.generic.SalesManagerEntity;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -11,10 +12,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.TableGenerator;
-
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.salesmanager.core.constants.SchemaConstant;
-import com.salesmanager.core.model.generic.SalesManagerEntity;
+import java.io.Serializable;
 
 @Entity
 @Table (name="ORDER_PRODUCT_DOWNLOAD")

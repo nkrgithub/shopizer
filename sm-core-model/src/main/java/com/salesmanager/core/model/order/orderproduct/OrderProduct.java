@@ -1,8 +1,8 @@
 package com.salesmanager.core.model.order.orderproduct;
 
-import java.math.BigDecimal;
-import java.util.HashSet;
-import java.util.Set;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.salesmanager.core.model.generic.SalesManagerEntity;
+import com.salesmanager.core.model.order.Order;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -15,10 +15,9 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.TableGenerator;
-
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.salesmanager.core.model.generic.SalesManagerEntity;
-import com.salesmanager.core.model.order.Order;
+import java.math.BigDecimal;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 @Table (name="ORDER_PRODUCT" )

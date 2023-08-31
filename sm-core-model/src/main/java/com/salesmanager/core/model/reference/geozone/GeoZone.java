@@ -1,7 +1,8 @@
 package com.salesmanager.core.model.reference.geozone;
 
-import java.util.ArrayList;
-import java.util.List;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.salesmanager.core.model.generic.SalesManagerEntity;
+import com.salesmanager.core.model.reference.country.Country;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -12,11 +13,8 @@ import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.TableGenerator;
-
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.salesmanager.core.constants.SchemaConstant;
-import com.salesmanager.core.model.generic.SalesManagerEntity;
-import com.salesmanager.core.model.reference.country.Country;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(name = "GEOZONE")

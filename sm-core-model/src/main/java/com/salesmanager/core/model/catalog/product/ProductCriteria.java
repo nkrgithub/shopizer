@@ -1,9 +1,9 @@
 package com.salesmanager.core.model.catalog.product;
 
-import java.util.List;
-
 import com.salesmanager.core.model.catalog.product.attribute.AttributeCriteria;
 import com.salesmanager.core.model.common.Criteria;
+
+import java.util.List;
 
 public class ProductCriteria extends Criteria {
 	

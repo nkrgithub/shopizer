@@ -1,8 +1,8 @@
 package com.salesmanager.core.model.catalog.product.inventory;
 
-import java.io.Serializable;
-
 import com.salesmanager.core.model.catalog.product.price.FinalPrice;
+
+import java.io.Serializable;
 
 public class ProductInventory implements Serializable {
 

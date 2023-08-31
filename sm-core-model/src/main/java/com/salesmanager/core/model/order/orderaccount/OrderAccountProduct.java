@@ -1,7 +1,7 @@
 package com.salesmanager.core.model.order.orderaccount;
 
-import java.io.Serializable;
-import java.util.Date;
+import com.salesmanager.core.model.order.orderproduct.OrderProduct;
+import com.salesmanager.core.utils.CloneUtils;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -15,10 +15,8 @@ import javax.persistence.Table;
 import javax.persistence.TableGenerator;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
-
-import com.salesmanager.core.constants.SchemaConstant;
-import com.salesmanager.core.model.order.orderproduct.OrderProduct;
-import com.salesmanager.core.utils.CloneUtils;
+import java.io.Serializable;
+import java.util.Date;
 
 @Entity
 @Table (name="ORDER_ACCOUNT_PRODUCT" )

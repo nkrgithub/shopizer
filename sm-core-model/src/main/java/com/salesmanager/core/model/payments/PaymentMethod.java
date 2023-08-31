@@ -1,9 +1,9 @@
 package com.salesmanager.core.model.payments;
 
-import java.io.Serializable;
-
 import com.salesmanager.core.model.system.IntegrationConfiguration;
 import com.salesmanager.core.model.system.IntegrationModule;
+
+import java.io.Serializable;
 
 /**
  * Object to be used in store front with meta data and configuration

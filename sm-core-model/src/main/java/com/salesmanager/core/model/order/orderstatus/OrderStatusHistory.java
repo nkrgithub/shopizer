@@ -1,7 +1,9 @@
 package com.salesmanager.core.model.order.orderstatus;
 
-import java.io.Serializable;
-import java.util.Date;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.salesmanager.core.model.order.Order;
+import com.salesmanager.core.utils.CloneUtils;
+import org.hibernate.annotations.Type;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -16,13 +18,8 @@ import javax.persistence.Table;
 import javax.persistence.TableGenerator;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
-
-import org.hibernate.annotations.Type;
-
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.salesmanager.core.constants.SchemaConstant;
-import com.salesmanager.core.model.order.Order;
-import com.salesmanager.core.utils.CloneUtils;
+import java.io.Serializable;
+import java.util.Date;
 
 @Entity
 @Table (name="ORDER_STATUS_HISTORY" )

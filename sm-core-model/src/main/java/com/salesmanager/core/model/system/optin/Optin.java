@@ -1,7 +1,8 @@
 package com.salesmanager.core.model.system.optin;
 
-import java.io.Serializable;
-import java.util.Date;
+import com.salesmanager.core.model.common.audit.AuditListener;
+import com.salesmanager.core.model.generic.SalesManagerEntity;
+import com.salesmanager.core.model.merchant.MerchantStore;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -18,11 +19,8 @@ import javax.persistence.TableGenerator;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.persistence.UniqueConstraint;
-
-import com.salesmanager.core.constants.SchemaConstant;
-import com.salesmanager.core.model.common.audit.AuditListener;
-import com.salesmanager.core.model.generic.SalesManagerEntity;
-import com.salesmanager.core.model.merchant.MerchantStore;
+import java.io.Serializable;
+import java.util.Date;
 
 
 /**

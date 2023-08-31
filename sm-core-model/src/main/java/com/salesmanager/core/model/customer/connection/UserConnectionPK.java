@@ -1,8 +1,7 @@
 package com.salesmanager.core.model.customer.connection;
 
-import java.io.Serializable;
-
 import javax.persistence.Embeddable;
+import java.io.Serializable;
 
 /**
  * Identity key for storing spring social objects

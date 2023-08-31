@@ -3,9 +3,11 @@
  */
 package com.salesmanager.core.model.shoppingcart;
 
-import java.util.Date;
-import java.util.HashSet;
-import java.util.Set;
+import com.salesmanager.core.model.common.audit.AuditListener;
+import com.salesmanager.core.model.common.audit.AuditSection;
+import com.salesmanager.core.model.common.audit.Auditable;
+import com.salesmanager.core.model.generic.SalesManagerEntity;
+import com.salesmanager.core.model.merchant.MerchantStore;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -25,12 +27,9 @@ import javax.persistence.TableGenerator;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.persistence.Transient;
-
-import com.salesmanager.core.model.common.audit.AuditListener;
-import com.salesmanager.core.model.common.audit.AuditSection;
-import com.salesmanager.core.model.common.audit.Auditable;
-import com.salesmanager.core.model.generic.SalesManagerEntity;
-import com.salesmanager.core.model.merchant.MerchantStore;
+import java.util.Date;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * <p>Shopping cart is responsible for storing and carrying

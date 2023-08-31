@@ -1,8 +1,8 @@
 package com.salesmanager.core.model.order;
 
-import java.util.List;
-
 import com.salesmanager.core.model.common.EntityList;
+
+import java.util.List;
 
 public class OrderList extends EntityList {
 	

@@ -1,12 +1,13 @@
 package com.salesmanager.core.model.system;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+import org.json.simple.JSONAware;
+import org.json.simple.JSONObject;
+
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import org.json.simple.JSONAware;
-import org.json.simple.JSONObject;
-import com.fasterxml.jackson.annotation.JsonProperty;
 
 /**
  * Object used to contain the integration information with an external gateway Uses simple JSON to

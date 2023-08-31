@@ -1,12 +1,12 @@
 package com.salesmanager.core.model.system;
 
-import java.io.Serializable;
-import java.util.HashMap;
-import java.util.Map;
-
 import org.apache.commons.lang3.StringUtils;
 import org.json.simple.JSONAware;
 import org.json.simple.JSONObject;
+
+import java.io.Serializable;
+import java.util.HashMap;
+import java.util.Map;
 
 public class MerchantConfig implements Serializable, JSONAware {
 	

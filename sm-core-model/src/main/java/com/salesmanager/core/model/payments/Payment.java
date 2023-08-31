@@ -1,9 +1,9 @@
 package com.salesmanager.core.model.payments;
 
+import com.salesmanager.core.model.reference.currency.Currency;
+
 import java.math.BigDecimal;
 import java.util.Map;
-
-import com.salesmanager.core.model.reference.currency.Currency;
 
 public class Payment {
 	

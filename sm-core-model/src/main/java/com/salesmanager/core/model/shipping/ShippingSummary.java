@@ -1,9 +1,9 @@
 package com.salesmanager.core.model.shipping;
 
+import com.salesmanager.core.model.common.Delivery;
+
 import java.io.Serializable;
 import java.math.BigDecimal;
-
-import com.salesmanager.core.model.common.Delivery;
 
 /**
  * Contains shipping fees according to user selections

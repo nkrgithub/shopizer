@@ -1,10 +1,20 @@
 package com.salesmanager.core.model.order;
 
-import java.math.BigDecimal;
-import java.util.Date;
-import java.util.LinkedHashSet;
-import java.util.Locale;
-import java.util.Set;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.salesmanager.core.model.common.Billing;
+import com.salesmanager.core.model.common.Delivery;
+import com.salesmanager.core.model.generic.SalesManagerEntity;
+import com.salesmanager.core.model.merchant.MerchantStore;
+import com.salesmanager.core.model.order.attributes.OrderAttribute;
+import com.salesmanager.core.model.order.orderproduct.OrderProduct;
+import com.salesmanager.core.model.order.orderstatus.OrderStatus;
+import com.salesmanager.core.model.order.orderstatus.OrderStatusHistory;
+import com.salesmanager.core.model.order.payment.CreditCard;
+import com.salesmanager.core.model.payments.PaymentType;
+import com.salesmanager.core.model.reference.currency.Currency;
+import com.salesmanager.core.utils.CloneUtils;
+import org.hibernate.annotations.OrderBy;
+import org.hibernate.annotations.Type;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -23,23 +33,11 @@ import javax.persistence.TableGenerator;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.validation.Valid;
-
-import org.hibernate.annotations.OrderBy;
-import org.hibernate.annotations.Type;
-
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.salesmanager.core.model.common.Billing;
-import com.salesmanager.core.model.common.Delivery;
-import com.salesmanager.core.model.generic.SalesManagerEntity;
-import com.salesmanager.core.model.merchant.MerchantStore;
-import com.salesmanager.core.model.order.attributes.OrderAttribute;
-import com.salesmanager.core.model.order.orderproduct.OrderProduct;
-import com.salesmanager.core.model.order.orderstatus.OrderStatus;
-import com.salesmanager.core.model.order.orderstatus.OrderStatusHistory;
-import com.salesmanager.core.model.order.payment.CreditCard;
-import com.salesmanager.core.model.payments.PaymentType;
-import com.salesmanager.core.model.reference.currency.Currency;
-import com.salesmanager.core.utils.CloneUtils;
+import java.math.BigDecimal;
+import java.util.Date;
+import java.util.LinkedHashSet;
+import java.util.Locale;
+import java.util.Set;
 
 @Entity
 @Table (name="ORDERS")

@@ -1,11 +1,11 @@
 package com.salesmanager.core.model.order.payment;
 
+import com.salesmanager.core.model.payments.CreditCardType;
+
 import javax.persistence.Column;
 import javax.persistence.Embeddable;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
-
-import com.salesmanager.core.model.payments.CreditCardType;
 
 @Embeddable
 public class CreditCard {

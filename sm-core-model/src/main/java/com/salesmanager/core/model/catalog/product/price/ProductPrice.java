@@ -1,9 +1,9 @@
 package com.salesmanager.core.model.catalog.product.price;
 
-import java.math.BigDecimal;
-import java.util.Date;
-import java.util.HashSet;
-import java.util.Set;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.salesmanager.core.model.catalog.product.availability.ProductAvailability;
+import com.salesmanager.core.model.generic.SalesManagerEntity;
+import com.salesmanager.core.utils.CloneUtils;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -23,11 +23,10 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Pattern;
-
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.salesmanager.core.model.catalog.product.availability.ProductAvailability;
-import com.salesmanager.core.model.generic.SalesManagerEntity;
-import com.salesmanager.core.utils.CloneUtils;
+import java.math.BigDecimal;
+import java.util.Date;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 @Table(name = "PRODUCT_PRICE")

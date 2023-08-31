@@ -1,5 +1,8 @@
 package com.salesmanager.core.model.order.attributes;
 
+import com.salesmanager.core.model.generic.SalesManagerEntity;
+import com.salesmanager.core.model.order.Order;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -9,10 +12,6 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.TableGenerator;
-
-import com.salesmanager.core.constants.SchemaConstant;
-import com.salesmanager.core.model.generic.SalesManagerEntity;
-import com.salesmanager.core.model.order.Order;
 
 /**
  * Entity used for storing various attributes related to an Order

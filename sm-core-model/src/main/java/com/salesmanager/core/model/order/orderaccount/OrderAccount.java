@@ -1,8 +1,8 @@
 package com.salesmanager.core.model.order.orderaccount;
 
-import java.util.Date;
-import java.util.HashSet;
-import java.util.Set;
+import com.salesmanager.core.model.generic.SalesManagerEntity;
+import com.salesmanager.core.model.order.Order;
+import com.salesmanager.core.utils.CloneUtils;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -17,11 +17,9 @@ import javax.persistence.Table;
 import javax.persistence.TableGenerator;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
-
-import com.salesmanager.core.constants.SchemaConstant;
-import com.salesmanager.core.model.generic.SalesManagerEntity;
-import com.salesmanager.core.model.order.Order;
-import com.salesmanager.core.utils.CloneUtils;
+import java.util.Date;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 @Table(name = "ORDER_ACCOUNT")

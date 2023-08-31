@@ -1,8 +1,10 @@
 package com.salesmanager.core.model.customer.review;
 
-import java.util.Date;
-import java.util.HashSet;
-import java.util.Set;
+import com.salesmanager.core.model.common.audit.AuditListener;
+import com.salesmanager.core.model.common.audit.AuditSection;
+import com.salesmanager.core.model.common.audit.Auditable;
+import com.salesmanager.core.model.customer.Customer;
+import com.salesmanager.core.model.generic.SalesManagerEntity;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -22,13 +24,9 @@ import javax.persistence.TableGenerator;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.persistence.UniqueConstraint;
-
-import com.salesmanager.core.constants.SchemaConstant;
-import com.salesmanager.core.model.common.audit.AuditListener;
-import com.salesmanager.core.model.common.audit.AuditSection;
-import com.salesmanager.core.model.common.audit.Auditable;
-import com.salesmanager.core.model.customer.Customer;
-import com.salesmanager.core.model.generic.SalesManagerEntity;
+import java.util.Date;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 @EntityListeners(value = AuditListener.class)

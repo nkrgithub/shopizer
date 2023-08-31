@@ -1,8 +1,7 @@
 package com.salesmanager.core.model.catalog.product.image;
 
-import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.List;
+import com.salesmanager.core.model.catalog.product.Product;
+import com.salesmanager.core.model.generic.SalesManagerEntity;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -17,9 +16,9 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.TableGenerator;
 import javax.persistence.Transient;
-
-import com.salesmanager.core.model.catalog.product.Product;
-import com.salesmanager.core.model.generic.SalesManagerEntity;
+import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(name = "PRODUCT_IMAGE")

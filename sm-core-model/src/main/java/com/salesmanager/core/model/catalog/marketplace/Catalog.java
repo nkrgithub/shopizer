@@ -1,14 +1,13 @@
 package com.salesmanager.core.model.catalog.marketplace;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import javax.persistence.Embedded;
-
 import com.salesmanager.core.model.common.audit.AuditSection;
 import com.salesmanager.core.model.common.audit.Auditable;
 import com.salesmanager.core.model.generic.SalesManagerEntity;
 import com.salesmanager.core.model.merchant.MerchantStore;
+
+import javax.persistence.Embedded;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * A catalog is used to classify products of a given merchant

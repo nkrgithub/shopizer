@@ -1,8 +1,7 @@
 package com.salesmanager.core.model.customer.connection;
 
-import java.io.Serializable;
-
 import javax.persistence.MappedSuperclass;
+import java.io.Serializable;
 
 
 @Deprecated

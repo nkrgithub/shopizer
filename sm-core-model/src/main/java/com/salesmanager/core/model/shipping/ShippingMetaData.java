@@ -1,8 +1,8 @@
 package com.salesmanager.core.model.shipping;
 
-import java.util.List;
-
 import com.salesmanager.core.model.reference.country.Country;
+
+import java.util.List;
 
 /**
  * Describes how shipping is configured for a given store

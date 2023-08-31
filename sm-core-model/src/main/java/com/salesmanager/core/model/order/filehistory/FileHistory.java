@@ -1,7 +1,7 @@
 package com.salesmanager.core.model.order.filehistory;
 
-import java.io.Serializable;
-import java.util.Date;
+import com.salesmanager.core.model.merchant.MerchantStore;
+import com.salesmanager.core.utils.CloneUtils;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -15,9 +15,8 @@ import javax.persistence.TableGenerator;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.persistence.UniqueConstraint;
-
-import com.salesmanager.core.model.merchant.MerchantStore;
-import com.salesmanager.core.utils.CloneUtils;
+import java.io.Serializable;
+import java.util.Date;
 
 @Entity
 @Table (name="FILE_HISTORY", uniqueConstraints={

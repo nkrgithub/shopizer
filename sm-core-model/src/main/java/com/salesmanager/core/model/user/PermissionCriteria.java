@@ -1,9 +1,9 @@
 package com.salesmanager.core.model.user;
 
+import com.salesmanager.core.model.common.Criteria;
+
 import java.util.List;
 import java.util.Set;
-
-import com.salesmanager.core.model.common.Criteria;
 
 public class PermissionCriteria extends Criteria {
 	
