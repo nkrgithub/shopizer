@@ -35,6 +35,7 @@
         <module>shopizer-commons</module>
         <module>shopizer-system</module>
         <module>shopizer-user</module>
+        <module>shopizer-customer</module>
         <module>shopizer-tax</module>
         <module>shopizer-category</module>
         <module>shopizer-catalog</module>
@@ -42,6 +43,7 @@
         <module>shopizer-order</module>
         <module>shopizer-payment</module>
         <module>shopizer-shipping</module>
+        <module>shopizer-shopping-cart</module>
         <module>shopizer-content</module>
         <module>shopizer-security</module>
 

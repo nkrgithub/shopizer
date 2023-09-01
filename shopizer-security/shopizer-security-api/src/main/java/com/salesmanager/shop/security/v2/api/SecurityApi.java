@@ -16,8 +16,8 @@
  */
 package com.salesmanager.shop.security.v2.api;
 
-import com.salesmanager.shop.security.model.ReadableGroup;
-import com.salesmanager.shop.security.model.ReadablePermission;
+import com.salesmanager.shop.user.model.ReadableGroup;
+import com.salesmanager.shop.user.model.ReadablePermission;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;

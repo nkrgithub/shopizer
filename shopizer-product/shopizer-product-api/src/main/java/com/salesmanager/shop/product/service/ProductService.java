@@ -1,6 +1,6 @@
 package com.salesmanager.shop.product.service;
 
-import com.salesmanager.core.model.tax.taxclass.TaxClass;
+import com.salesmanager.shop.category.entity.Category;
 import com.salesmanager.shop.commons.entity.language.Language;
 import com.salesmanager.shop.commons.entity.merchant.MerchantStore;
 import com.salesmanager.shop.commons.exception.ServiceException;
@@ -9,6 +9,7 @@ import com.salesmanager.shop.product.entity.Product;
 import com.salesmanager.shop.product.entity.ProductCriteria;
 import com.salesmanager.shop.product.entity.ProductList;
 import com.salesmanager.shop.product.entity.description.ProductDescription;
+import com.salesmanager.shop.tax.entity.TaxClass;
 import org.springframework.data.domain.Page;
 
 import java.util.List;

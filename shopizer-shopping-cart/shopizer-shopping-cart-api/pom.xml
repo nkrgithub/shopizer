@@ -5,37 +5,26 @@
     <modelVersion>4.0.0</modelVersion>
     <parent>
         <groupId>com.shopizer</groupId>
-        <artifactId>shopizer-order</artifactId>
+        <artifactId>shopizer-shopping-cart</artifactId>
         <version>3.2.5</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
 
-    <artifactId>shopizer-order-api</artifactId>
+    <artifactId>shopizer-shopping-cart-api</artifactId>
 
     <dependencies>
 
-        <!-- Shopizer API -->
+        <!-- Shopizer Product API -->
         <dependency>
             <groupId>com.shopizer</groupId>
-            <artifactId>shopizer-commons-api</artifactId>
+            <artifactId>shopizer-product-api</artifactId>
             <version>${version}</version>
         </dependency>
 
+        <!-- Shopizer Order API -->
         <dependency>
             <groupId>com.shopizer</groupId>
-            <artifactId>shopizer-payment-api</artifactId>
-            <version>${version}</version>
-        </dependency>
-
-        <dependency>
-            <groupId>com.shopizer</groupId>
-            <artifactId>shopizer-shipping-api</artifactId>
-            <version>${version}</version>
-        </dependency>
-
-        <dependency>
-            <groupId>com.shopizer</groupId>
-            <artifactId>shopizer-shopping-cart-api</artifactId>
+            <artifactId>shopizer-order-api</artifactId>
             <version>${version}</version>
         </dependency>
 
@@ -50,13 +39,6 @@
         <dependency>
             <groupId>javax.persistence</groupId>
             <artifactId>javax.persistence-api</artifactId>
-            <optional>true</optional>
-        </dependency>
-
-        <!-- Hibernate -->
-        <dependency>
-            <groupId>org.hibernate</groupId>
-            <artifactId>hibernate-core</artifactId>
             <optional>true</optional>
         </dependency>
 
@@ -92,7 +74,6 @@
             <artifactId>grpc-stub</artifactId>
             <optional>true</optional>
         </dependency>
-
     </dependencies>
 
 </project>

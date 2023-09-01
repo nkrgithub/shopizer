@@ -1,6 +1,9 @@
 package com.salesmanager.shop.order.entity;
 
 
+import com.salesmanager.shop.shipping.entity.ShippingSummary;
+import com.salesmanager.shop.shoppping.cart.entity.ShoppingCartItem;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;

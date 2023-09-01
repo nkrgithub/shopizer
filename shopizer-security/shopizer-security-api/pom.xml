@@ -20,7 +20,7 @@
         <!-- Shopizer API -->
         <dependency>
             <groupId>com.shopizer</groupId>
-            <artifactId>shopizer-commons-api</artifactId>
+            <artifactId>shopizer-user-api</artifactId>
             <version>${version}</version>
         </dependency>
 

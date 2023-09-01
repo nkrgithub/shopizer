@@ -5,37 +5,25 @@
     <modelVersion>4.0.0</modelVersion>
     <parent>
         <groupId>com.shopizer</groupId>
-        <artifactId>shopizer-order</artifactId>
+        <artifactId>shopizer-customer</artifactId>
         <version>3.2.5</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
 
-    <artifactId>shopizer-order-api</artifactId>
+    <artifactId>shopizer-customer-api</artifactId>
 
     <dependencies>
 
         <!-- Shopizer API -->
         <dependency>
             <groupId>com.shopizer</groupId>
-            <artifactId>shopizer-commons-api</artifactId>
+            <artifactId>shopizer-user-api</artifactId>
             <version>${version}</version>
         </dependency>
 
         <dependency>
             <groupId>com.shopizer</groupId>
-            <artifactId>shopizer-payment-api</artifactId>
-            <version>${version}</version>
-        </dependency>
-
-        <dependency>
-            <groupId>com.shopizer</groupId>
-            <artifactId>shopizer-shipping-api</artifactId>
-            <version>${version}</version>
-        </dependency>
-
-        <dependency>
-            <groupId>com.shopizer</groupId>
-            <artifactId>shopizer-shopping-cart-api</artifactId>
+            <artifactId>shopizer-product-api</artifactId>
             <version>${version}</version>
         </dependency>
 
@@ -53,7 +41,6 @@
             <optional>true</optional>
         </dependency>
 
-        <!-- Hibernate -->
         <dependency>
             <groupId>org.hibernate</groupId>
             <artifactId>hibernate-core</artifactId>
