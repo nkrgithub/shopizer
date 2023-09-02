@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.salesmanager.shop.security.service;
+package com.salesmanager.shop.user.service;
 
 
 import com.salesmanager.shop.security.v2.api.grpc.EmptyRequest;

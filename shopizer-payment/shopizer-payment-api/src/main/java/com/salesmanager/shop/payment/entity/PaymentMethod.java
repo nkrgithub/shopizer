@@ -1,7 +1,8 @@
 package com.salesmanager.shop.payment.entity;
 
-import com.salesmanager.core.model.system.IntegrationConfiguration;
-import com.salesmanager.core.model.system.IntegrationModule;
+
+import com.salesmanager.shop.system.entity.IntegrationModule;
+import com.salesmanager.shop.system.model.IntegrationConfiguration;
 
 import java.io.Serializable;
 

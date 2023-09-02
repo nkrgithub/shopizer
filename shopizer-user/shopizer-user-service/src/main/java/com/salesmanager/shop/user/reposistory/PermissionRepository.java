@@ -1,6 +1,6 @@
-package com.salesmanager.shop.security.reposistory;
+package com.salesmanager.shop.user.reposistory;
 
-import com.salesmanager.shop.security.entity.Permission;
+import com.salesmanager.shop.user.entity.Permission;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 

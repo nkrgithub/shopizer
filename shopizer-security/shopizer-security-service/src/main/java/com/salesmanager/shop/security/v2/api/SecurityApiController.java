@@ -2,12 +2,12 @@ package com.salesmanager.shop.security.v2.api;
 
 import com.salesmanager.shop.commons.exception.ResourceNotFoundException;
 import com.salesmanager.shop.commons.exception.ServiceRuntimeException;
-import com.salesmanager.shop.security.entity.Group;
-import com.salesmanager.shop.security.entity.Permission;
-import com.salesmanager.shop.security.model.ReadableGroup;
-import com.salesmanager.shop.security.model.ReadablePermission;
-import com.salesmanager.shop.security.service.GroupService;
-import com.salesmanager.shop.security.service.PermissionService;
+import com.salesmanager.shop.user.entity.Group;
+import com.salesmanager.shop.user.entity.Permission;
+import com.salesmanager.shop.user.model.ReadableGroup;
+import com.salesmanager.shop.user.model.ReadablePermission;
+import com.salesmanager.shop.user.service.GroupService;
+import com.salesmanager.shop.user.service.PermissionService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.SwaggerDefinition;

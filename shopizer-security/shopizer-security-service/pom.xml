@@ -21,13 +21,14 @@
             <artifactId>javax.annotation-api</artifactId>
         </dependency>
 
-        <!-- Shopizer Security API -->
+        <!-- Shopizer API -->
         <dependency>
             <groupId>com.shopizer</groupId>
             <artifactId>shopizer-security-api</artifactId>
             <version>${version}</version>
         </dependency>
 
+        <!-- Shopizer Commons Service -->
         <dependency>
             <groupId>com.shopizer</groupId>
             <artifactId>shopizer-commons-service</artifactId>

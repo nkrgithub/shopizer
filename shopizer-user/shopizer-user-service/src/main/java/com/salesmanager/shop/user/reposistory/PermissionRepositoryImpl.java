@@ -1,9 +1,9 @@
-package com.salesmanager.shop.security.reposistory;
+package com.salesmanager.shop.user.reposistory;
 
 
-import com.salesmanager.shop.security.entity.Permission;
-import com.salesmanager.shop.security.entity.PermissionCriteria;
-import com.salesmanager.shop.security.entity.PermissionList;
+import com.salesmanager.shop.user.entity.Permission;
+import com.salesmanager.shop.user.entity.PermissionCriteria;
+import com.salesmanager.shop.user.entity.PermissionList;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;

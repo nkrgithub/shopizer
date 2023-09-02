@@ -1,6 +1,7 @@
 package com.salesmanager.shop.user.model;
 
-import com.salesmanager.shop.model.entity.ReadableList;
+
+import com.salesmanager.shop.commons.model.ReadableList;
 
 import java.util.ArrayList;
 import java.util.List;

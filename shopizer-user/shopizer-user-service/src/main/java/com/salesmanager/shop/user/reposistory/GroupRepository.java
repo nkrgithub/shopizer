@@ -1,7 +1,7 @@
-package com.salesmanager.shop.security.reposistory;
+package com.salesmanager.shop.user.reposistory;
 
-import com.salesmanager.shop.security.entity.Group;
-import com.salesmanager.shop.security.entity.GroupType;
+import com.salesmanager.shop.user.entity.Group;
+import com.salesmanager.shop.user.entity.GroupType;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 

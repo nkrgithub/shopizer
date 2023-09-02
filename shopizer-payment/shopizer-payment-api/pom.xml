@@ -21,6 +21,18 @@
             <version>${version}</version>
         </dependency>
 
+        <dependency>
+            <groupId>com.shopizer</groupId>
+            <artifactId>shopizer-system-api</artifactId>
+            <version>${version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.shopizer</groupId>
+            <artifactId>shopizer-order-api</artifactId>
+            <version>${version}</version>
+        </dependency>
+
         <!-- Java Persistence API -->
         <dependency>
             <groupId>javax.annotation</groupId>
@@ -32,6 +44,12 @@
         <dependency>
             <groupId>javax.persistence</groupId>
             <artifactId>javax.persistence-api</artifactId>
+            <optional>true</optional>
+        </dependency>
+
+        <dependency>
+            <groupId>org.hibernate</groupId>
+            <artifactId>hibernate-core</artifactId>
             <optional>true</optional>
         </dependency>
 

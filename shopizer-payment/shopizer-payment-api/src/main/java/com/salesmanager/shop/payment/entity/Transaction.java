@@ -1,11 +1,11 @@
 package com.salesmanager.shop.payment.entity;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.salesmanager.core.model.common.audit.AuditListener;
-import com.salesmanager.core.model.common.audit.AuditSection;
-import com.salesmanager.core.model.common.audit.Auditable;
-import com.salesmanager.core.model.generic.SalesManagerEntity;
-import com.salesmanager.core.model.order.Order;
+import com.salesmanager.shop.commons.entity.generic.SalesManagerEntity;
+import com.salesmanager.shop.commons.model.audit.AuditListener;
+import com.salesmanager.shop.commons.model.audit.AuditSection;
+import com.salesmanager.shop.commons.model.audit.Auditable;
+import com.salesmanager.shop.order.entity.Order;
 import org.hibernate.annotations.Type;
 import org.json.simple.JSONAware;
 import org.slf4j.Logger;

@@ -1,11 +1,11 @@
-package com.salesmanager.shop.security.service;
+package com.salesmanager.shop.user.service;
 
 import com.salesmanager.shop.commons.exception.ServiceException;
 import com.salesmanager.shop.commons.service.generic.SalesManagerEntityService;
-import com.salesmanager.shop.security.entity.Group;
-import com.salesmanager.shop.security.entity.Permission;
-import com.salesmanager.shop.security.entity.PermissionCriteria;
-import com.salesmanager.shop.security.entity.PermissionList;
+import com.salesmanager.shop.user.entity.Group;
+import com.salesmanager.shop.user.entity.Permission;
+import com.salesmanager.shop.user.entity.PermissionCriteria;
+import com.salesmanager.shop.user.entity.PermissionList;
 
 import java.util.List;
 
