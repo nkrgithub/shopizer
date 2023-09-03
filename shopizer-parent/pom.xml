@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>com.shopizer</groupId>
+        <artifactId>shopizer</artifactId>
+        <version>3.2.5</version>
+        <relativePath>../pom.xml</relativePath>
+    </parent>
+
+    <artifactId>shopizer-parent</artifactId>
+    <packaging>pom</packaging>
+
+    <modules>
+        <module>shopizer-commons</module>
+        <module>shopizer-system</module>
+        <module>shopizer-user</module>
+        <module>shopizer-customer</module>
+        <module>shopizer-tax</module>
+        <module>shopizer-category</module>
+        <module>shopizer-catalog</module>
+        <module>shopizer-product</module>
+        <module>shopizer-order</module>
+        <module>shopizer-payment</module>
+        <module>shopizer-shipping</module>
+        <module>shopizer-shopping-cart</module>
+        <module>shopizer-content</module>
+        <module>shopizer-security</module>
+    </modules>
+
+</project>

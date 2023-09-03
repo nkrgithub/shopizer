@@ -32,24 +32,8 @@
         <module>sm-shop-model</module>
         <module>sm-shop</module>
 
-        <module>shopizer-commons</module>
-        <module>shopizer-system</module>
-        <module>shopizer-user</module>
-        <module>shopizer-customer</module>
-        <module>shopizer-tax</module>
-        <module>shopizer-category</module>
-        <module>shopizer-catalog</module>
-        <module>shopizer-product</module>
-        <module>shopizer-order</module>
-        <module>shopizer-payment</module>
-        <module>shopizer-shipping</module>
-        <module>shopizer-shopping-cart</module>
-        <module>shopizer-content</module>
-        <module>shopizer-security</module>
-
-        <module>eureka-server</module>
-        <module>api-gateway</module>
-        <module>mybatis-generator</module>
+        <module>shopizer-parent</module>
+        <module>middleware</module>
     </modules>
 
     <properties>
