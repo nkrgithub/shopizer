@@ -21,12 +21,6 @@
             <version>${project.version}</version>
         </dependency>
 
-        <dependency>
-            <groupId>com.shopizer</groupId>
-            <artifactId>shopizer-commons-entity</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-
         <!-- Java Persistence API -->
         <dependency>
             <groupId>javax.annotation</groupId>
@@ -73,6 +67,7 @@
             <artifactId>grpc-stub</artifactId>
             <optional>true</optional>
         </dependency>
+
     </dependencies>
 
 </project>

@@ -23,7 +23,7 @@
 
         <dependency>
             <groupId>com.shopizer</groupId>
-            <artifactId>shopizer-commons-entity</artifactId>
+            <artifactId>shopizer-store-api</artifactId>
             <version>${project.version}</version>
         </dependency>
 

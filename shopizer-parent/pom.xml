@@ -28,6 +28,7 @@
         <module>shopizer-shopping-cart</module>
         <module>shopizer-content</module>
         <module>shopizer-security</module>
+        <module>shopizer-store</module>
     </modules>
 
 </project>

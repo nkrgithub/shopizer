@@ -1,7 +1,7 @@
 package com.salesmanager.shop.category.model;
 
 
-import com.salesmanager.shop.commons.entity.common.ReadableList;
+import com.salesmanager.shop.commons.model.entity.ReadableList;
 
 import java.util.ArrayList;
 import java.util.List;

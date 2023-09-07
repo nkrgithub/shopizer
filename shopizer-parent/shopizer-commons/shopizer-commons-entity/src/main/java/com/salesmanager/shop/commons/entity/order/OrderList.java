@@ -1,6 +1,6 @@
 package com.salesmanager.shop.commons.entity.order;
 
-import com.salesmanager.shop.commons.entity.common.EntityList;
+import com.salesmanager.shop.commons.model.entity.EntityList;
 
 import java.util.List;
 

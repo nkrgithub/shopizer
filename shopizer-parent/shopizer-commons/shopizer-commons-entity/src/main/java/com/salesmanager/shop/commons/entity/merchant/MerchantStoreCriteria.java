@@ -1,6 +1,6 @@
 package com.salesmanager.shop.commons.entity.merchant;
 
-import com.salesmanager.shop.commons.entity.common.Criteria;
+import com.salesmanager.shop.commons.model.entity.Criteria;
 
 public class MerchantStoreCriteria extends Criteria {
 	

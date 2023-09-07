@@ -1,7 +1,6 @@
 package com.salesmanager.shop.commons.entity.merchant;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.salesmanager.core.constants.MeasureUnit;
 import com.salesmanager.shop.commons.entity.common.audit.AuditSection;
 import com.salesmanager.shop.commons.entity.common.audit.Auditable;
 import com.salesmanager.shop.commons.entity.generic.SalesManagerEntity;
@@ -9,6 +8,7 @@ import com.salesmanager.shop.commons.entity.reference.country.Country;
 import com.salesmanager.shop.commons.entity.reference.currency.Currency;
 import com.salesmanager.shop.commons.entity.reference.language.Language;
 import com.salesmanager.shop.commons.entity.reference.zone.Zone;
+import com.salesmanager.shop.commons.enums.MeasureUnit;
 import com.salesmanager.shop.commons.util.CloneUtils;
 
 import javax.persistence.CascadeType;

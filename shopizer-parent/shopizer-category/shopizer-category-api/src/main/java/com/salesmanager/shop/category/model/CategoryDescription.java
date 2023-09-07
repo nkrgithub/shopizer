@@ -1,7 +1,7 @@
 package com.salesmanager.shop.category.model;
 
 
-import com.salesmanager.shop.commons.entity.common.NamedEntity;
+import com.salesmanager.shop.commons.model.entity.NamedEntity;
 
 import java.io.Serializable;
 
